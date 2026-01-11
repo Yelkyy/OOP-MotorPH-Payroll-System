@@ -1,57 +1,61 @@
 # MotorPH Payroll Management System
 
-**MotorPH Payroll Management System** is a desktop application designed to streamline payroll processing and employee management for MotorPH. The system provides a user-friendly interface to manage employee records, process payrolls, and view detailed payslips.
+**MotorPH Payroll Management System** is a Java desktop app that helps MotorPH manage employee records, calculate payroll, and provide employees with access to their payslips.
 
 ---
 
-## Overview
+## 🧾 Overview
 
-The MotorPH Employee App is designed to support HR and payroll operations by managing employee records, pay periods, and payslip generation.
+This system supports HR and Payroll operations with features like employee management, automated pay periods, and secure login access.
 
-This system includes features from the following change requests:
-
-- **MPHCR01** – Employee data management  
-- **MPHCR02** – Pay period coverage and automation  
-- **MPHCR03** – Payslip viewing and payroll breakdown  
-- **MPHCR04** – Secure login using CSV-based credential validation
-
----
-
-## Features
-✅ Employee Record Management
-- Add new employees
-- Edit existing employee details
-- Delete employee records with confirmation
-
-📅 Payroll Period Handling
-- Dynamic display of current pay periods based on system date
-
-📄 Payslip View Panel
-- Breakdown of deductions (SSS, PhilHealth, Pag-IBIG, Tax)
-- Displays net pay and total compensation
-- Integrated with time logs and deduction calculations
-
-🔍 Quick Employee Search
-- Search bar in employee panel for fast lookup
-
-💡 Modern Interface
-- Clean and consistent GUI using Java Swing
-- Aligned with MotorPH’s branding and visual identity
-
-📁 CSV Data Integration
-- Employee records are read from and written to CSV files using OpenCSV
-- Supports persistent data updates after add/edit/delete actions
+It includes features based on the following change requests:
+- **MPHCR01** – Manage employee data  
+- **MPHCR02** – Auto-generate pay periods  
+- **MPHCR03** – View payslips and payroll breakdown  
+- **MPHCR04** – CSV-based secure login system
 
 ---
 
-## How to Download and Run
+## 👥 Features by Role
 
-1. Click **Code** button on this repository page.
-2. Open the project in your IDE/editor and run the application.
-3. Use the following credentials (based on the `MotorPH Users.csv` file):
-   - **Email:** `brad.sanjose@motorph.com`
-     **Password:** `10007`
-   - **Email:** `alice.romualdez@motorph.com`
-     **Password:** `10008`
-   - **Email:** `rosie.atienza@motorph.com`
-     **Password:** `10009`
+### 👨‍💼 Admin Features
+- ✅ Add, edit, and delete employee records   
+- 📅 View and manage payroll periods  
+- 📄 View payslips for all employees  
+- 🧹 Automatically update supervisor list when employees are added or removed  
+- 📁 All data saved in CSV files (employees, users, time logs, leave requests)
+
+### 👩‍💻 Employee Features
+- 🔑 Log in securely using username and password  
+- 🧾 View personal payslip details (net pay, deductions, etc.)
+- 🕒 **Time In / Time Out logging** with automatic date and time recording  
+- 🕒 View personal attendance records with Time   
+- 📝 Submit leave requests  
+- 👤 View and edit some personal profile information  
+
+---
+
+## 💻 How to Download and Run
+
+1. Click the **Code** button on this repository, then select **Download ZIP** or use Git to clone.
+2. Open the project in **NetBeans** or any Java IDE.
+3. Press `F6` to build and run the app.
+
+---
+
+## 🔐 Default Login Credentials
+
+| Role      | Username       | Password |
+|-----------|----------------|----------|
+| Admin     | `admin1`       | `12345`  |
+| Employee  | `vella.santos` | `10023`  |
+
+---
+
+## 📁 File Locations
+- **Employee Data:** `resources/Copy of MotorPH Employee Data.csv`
+- **Time Logs:** `resources/Copy of MotorPH Employee Data Time Logs.csv`
+- **User Accounts:** `resources/MotorPH Users.csv`
+- **Leave Requests:** `resources/MotorPH_LeaveRequest.csv`
+
+---
