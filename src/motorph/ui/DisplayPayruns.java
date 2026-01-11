@@ -7,10 +7,12 @@ import motorph.repository.DataHandler;
 import motorph.service.PayrollService;
 import motorph.ui.PayslipViewPanel;
 
-
 import java.util.List;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
+import java.util.Locale;
+
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -26,6 +28,25 @@ public class DisplayPayruns extends javax.swing.JPanel {
     private final int rowsPerPage = 15;
     private int totalPages = 1;
     private String currentPayDate;
+
+    private static final DateTimeFormatter FULL_DATE_FMT =
+            DateTimeFormatter.ofPattern("MMMM d, yyyy", Locale.US).withResolverStyle(ResolverStyle.SMART);
+
+    private static final DateTimeFormatter TIMELOG_FMT =
+            DateTimeFormatter.ofPattern("MM/dd/uuuu", Locale.US).withResolverStyle(ResolverStyle.STRICT);
+
+    private static LocalDate parsePayDate(String payDate) {
+        String v = payDate == null ? "" : payDate.trim();
+        try {
+            return LocalDate.parse(v, FULL_DATE_FMT);
+        } catch (Exception e) {
+            return LocalDate.parse(v, TIMELOG_FMT);
+        }
+    }
+
+    private static LocalDate parseTimelogDate(String raw) {
+        return LocalDate.parse(raw == null ? "" : raw.trim(), TIMELOG_FMT);
+    }
 
     public DisplayPayruns() {
         initComponents();
@@ -110,25 +131,23 @@ public class DisplayPayruns extends javax.swing.JPanel {
         totalPages = (int) Math.ceil((double) totalRecords / rowsPerPage);
         int startIndex = (currentPage - 1) * rowsPerPage;
         int endIndex = Math.min(startIndex + rowsPerPage, totalRecords);
-        int payPeriod = extractPayPeriodFromDate(payDate);
 
-        // ✅ Parse "June 15, 2024" to LocalDate, then get MM-yyyy
-        DateTimeFormatter fullDateFmt = DateTimeFormatter.ofPattern("MMMM d, yyyy");
-        LocalDate parsedDate = LocalDate.parse(payDate, fullDateFmt);
-        String monthYear = parsedDate.format(DateTimeFormatter.ofPattern("MM-yyyy"));
+        LocalDate cutoffDate = parsePayDate(payDate);
+        int payPeriod = (cutoffDate.getDayOfMonth() <= 15) ? 1 : 2;
+        String monthYear = cutoffDate.format(DateTimeFormatter.ofPattern("MM-yyyy"));
 
         for (int i = startIndex; i < endIndex; i++) {
             EmployeeDetails emp = employees.get(i);
             
-        List<EmployeeTimeLogs> empLogs = timeLogs.stream()
-            .filter(log -> log.getEmployeeNumber().equals(emp.getEmployeeNumber()))
-            .filter(log -> {
-                LocalDate logDate = LocalDate.parse(log.getDate());
-                return isInPayPeriod(logDate, parsedDate);
-            })
-            .toList();
+            List<EmployeeTimeLogs> empLogs = timeLogs.stream()
+                .filter(log -> log.getEmployeeNumber().equals(emp.getEmployeeNumber()))
+                .filter(log -> {
+                    LocalDate logDate = parseTimelogDate(log.getDate());
+                    return isInPayPeriod(logDate, cutoffDate);
+                })
+                .toList();
 
-        double netPay = PayrollService.calculateNetPay(emp, empLogs, monthYear, payPeriod);
+            double netPay = PayrollService.calculateNetPay(emp, empLogs, monthYear, payPeriod);
 
             
             String paymentStr = String.format("₱%,.2f", netPay);
@@ -152,9 +171,8 @@ public class DisplayPayruns extends javax.swing.JPanel {
     
     private int extractPayPeriodFromDate(String payDate) {
         try {
-            String[] parts = payDate.split(" ");
-            int day = Integer.parseInt(parts[1].replace(",", ""));
-            return (day <= 15) ? 1 : 2;
+            LocalDate d = parsePayDate(payDate);
+            return (d.getDayOfMonth() <= 15) ? 1 : 2;
         } catch (Exception e) {
             e.printStackTrace();
             return 1; // fallback to 1

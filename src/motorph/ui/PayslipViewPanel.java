@@ -2,7 +2,9 @@ package motorph.ui;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 import java.util.List;
+import java.util.Locale;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,6 +18,21 @@ public class PayslipViewPanel extends JPanel {
 
     private String employeeId;
     private String payDate;
+
+    private static final DateTimeFormatter PAY_DATE_LONG =
+            DateTimeFormatter.ofPattern("MMMM d, uuuu", Locale.US).withResolverStyle(ResolverStyle.SMART);
+
+    private static final DateTimeFormatter PAY_DATE_SHORT =
+            DateTimeFormatter.ofPattern("MM/dd/uuuu", Locale.US).withResolverStyle(ResolverStyle.STRICT);
+
+    private static LocalDate parsePayDate(String raw) {
+        String v = raw == null ? "" : raw.trim();
+        try {
+            return LocalDate.parse(v, PAY_DATE_LONG);
+        } catch (Exception e) {
+            return LocalDate.parse(v, PAY_DATE_SHORT);
+        }
+    }
 
     public PayslipViewPanel() {
         initComponents();
@@ -31,13 +48,10 @@ public class PayslipViewPanel extends JPanel {
         payrollDate.setText(payDate);
     }
     
-        public void setPayPeriod(String period) {
+    public void setPayPeriod(String period) {
         dateCovered.setText(period);
     }
 
-
-    
-    
     private void loadEmployeeData() {
         EmployeeDetails emp = EmployeeDataUtil.getEmployeeById(employeeId);
         
@@ -64,13 +78,10 @@ public class PayslipViewPanel extends JPanel {
                                 + emp.getClothingAllowance();
             totalCompValue.setText(formatCurrency(totalComp));
 
-            
-
             List<EmployeeTimeLogs> logs = EmployeeDataUtil.getTimeLogsForEmployee(employeeId);
 
             // Derive monthYear and payPeriod
-            DateTimeFormatter fullFormat = DateTimeFormatter.ofPattern("MMMM d, yyyy");
-            LocalDate date = LocalDate.parse(payDate, fullFormat);
+            LocalDate date = parsePayDate(payDate);
             String monthYear = date.format(DateTimeFormatter.ofPattern("MM-yyyy"));
             int payPeriod = (date.getDayOfMonth() <= 15) ? 1 : 2;
 
@@ -78,25 +89,22 @@ public class PayslipViewPanel extends JPanel {
             DeductionBreakdown breakdown = PayrollService.computeDeductions(emp, logs, monthYear, payPeriod);
 
             // Set to labels
-            sssVal.setText(String.format("₱ %, .2f", breakdown.sss));
-            philHealthVal.setText(String.format("₱ %, .2f", breakdown.philhealth));
-            pagIbigVal.setText(String.format("₱ %, .2f", breakdown.pagibig));
-            taxVal.setText(String.format("₱ %, .2f", breakdown.tax));
-            deducSss.setText(String.format("₱ %, .2f", breakdown.sss));
-            deducPhilHealth.setText(String.format("₱ %, .2f", breakdown.philhealth));
-            deducHDMF.setText(String.format("₱ %, .2f", breakdown.pagibig));
-            deducTax.setText(String.format("₱ %, .2f", breakdown.tax));
-            totalDeducValue.setText(String.format("₱ %, .2f", breakdown.totalDeductions));
-            netPayValue.setText(String.format("₱ %, .2f", breakdown.netPay));
-
+            sssVal.setText(String.format("₱ %,.2f", breakdown.sss));
+            philHealthVal.setText(String.format("₱ %,.2f", breakdown.philhealth));
+            pagIbigVal.setText(String.format("₱ %,.2f", breakdown.pagibig));
+            taxVal.setText(String.format("₱ %,.2f", breakdown.tax));
+            deducSss.setText(String.format("₱ %,.2f", breakdown.sss));
+            deducPhilHealth.setText(String.format("₱ %,.2f", breakdown.philhealth));
+            deducHDMF.setText(String.format("₱ %,.2f", breakdown.pagibig));
+            deducTax.setText(String.format("₱ %,.2f", breakdown.tax));
+            totalDeducValue.setText(String.format("₱ %,.2f", breakdown.totalDeductions));
+            netPayValue.setText(String.format("₱ %,.2f", breakdown.netPay));
         }
     }
     
     private String formatCurrency(double value) {
         return String.format("₱%,.2f", value);
     }
-
-
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

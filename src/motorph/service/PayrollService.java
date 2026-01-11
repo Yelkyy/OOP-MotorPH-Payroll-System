@@ -9,6 +9,8 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.Duration;
+import java.time.format.ResolverStyle;
+import java.util.Locale;
 
 import motorph.model.EmployeeDetails;
 import motorph.model.EmployeeTimeLogs;
@@ -38,6 +40,13 @@ public class PayrollService {
     private static final double TAX_BRACKET_4_LIMIT = 166667;
     private static final double TAX_BRACKET_5_LIMIT = 666667;
 
+    private static final DateTimeFormatter TIMELOG_DATE_FMT =
+            DateTimeFormatter.ofPattern("MM/dd/uuuu", Locale.US).withResolverStyle(ResolverStyle.STRICT);
+
+    private static LocalDate parseLogDate(String raw) {
+        return LocalDate.parse(raw == null ? "" : raw.trim(), TIMELOG_DATE_FMT);
+    }
+
     // Main method to handle payroll based on user choice
     public static void processPayroll(EmployeeDetails employee, List<EmployeeTimeLogs> logs, String monthYear) {
 
@@ -55,7 +64,7 @@ public class PayrollService {
         List<EmployeeTimeLogs> filteredLogs = filterLogsByDateRange(logs, monthYear, startDay, endDay);
         printPayrollSummary(employee, filteredLogs, monthYear, startDay, endDay);
     }
-      
+
     private static int choosePayPeriod() {
         System.out.println("Select Pay Period: [1] 1-15 or [2] 16-EndOfMonth");
         int choice = scanner.nextInt();
@@ -75,7 +84,7 @@ public class PayrollService {
 
         for (EmployeeTimeLogs log : logs) {
             try {
-                LocalDate logDate = LocalDate.parse(log.getDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                LocalDate logDate = parseLogDate(log.getDate());
                 String logMonthYear = logDate.format(ymFormatter);
 
                 if (logMonthYear.equals(monthYear) && logDate.getDayOfMonth() >= startDay && logDate.getDayOfMonth() <= endDay) {
@@ -247,10 +256,10 @@ public class PayrollService {
 
         return Math.round(tax * 100.0) / 100.0;
     }
-    
-    public static double calculateNetPay(EmployeeDetails employee, List<EmployeeTimeLogs> logs, 
+
+    public static double calculateNetPay(EmployeeDetails employee, List<EmployeeTimeLogs> logs,
             String monthYear, int payPeriod){
-        
+
         YearMonth yearMonth = YearMonth.parse(monthYear, DateTimeFormatter.ofPattern("MM-yyyy"));
         int lastDayOfMonth = yearMonth.lengthOfMonth();
 
@@ -260,12 +269,12 @@ public class PayrollService {
         boolean hasDeductions = (endDay != 15);
 
         double semiMonthlyBasic = employee.getBasicSalary() / 2;
-        double totalCompensation = employee.getRiceSubsidy() + 
-                                   employee.getPhoneAllowance() + 
+        double totalCompensation = employee.getRiceSubsidy() +
+                                   employee.getPhoneAllowance() +
                                    employee.getClothingAllowance();
 
         List<EmployeeTimeLogs> filteredLogs = filterLogsByDateRange(logs, monthYear, startDay, endDay);
-        
+
         if (filteredLogs.isEmpty()) {
             return 0.0;
         }
@@ -301,8 +310,8 @@ public class PayrollService {
             return 0.0;
         }
     }
-    
-    public static DeductionBreakdown computeDeductions(EmployeeDetails employee, 
+
+    public static DeductionBreakdown computeDeductions(EmployeeDetails employee,
             List<EmployeeTimeLogs> logs, String monthYear, int payPeriod) {
         DeductionBreakdown result = new DeductionBreakdown();
 
@@ -333,12 +342,9 @@ public class PayrollService {
 
         return result;
     }
-    
+
     public static DeductionBreakdown computeDeductions(EmployeeDetails emp, String monthYear, int payPeriod) {
         List<EmployeeTimeLogs> logs = EmployeeDataUtil.getTimeLogsForEmployee(emp.getEmployeeNumber());
         return computeDeductions(emp, logs, monthYear, payPeriod);
     }
-
-
-    
 }

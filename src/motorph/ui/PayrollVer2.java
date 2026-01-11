@@ -1,11 +1,12 @@
 package motorph.ui;
 
-
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -15,57 +16,60 @@ import motorph.model.EmployeeTimeLogs;
 import motorph.service.PayrollService;
 import motorph.ui.components.CustomFont;
 
-
-
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import motorph.ui.components.MyRender;
 
-
-
 public class PayrollVer2 extends javax.swing.JPanel {
-    
+
         private List<EmployeeDetails> employees;
         private List<EmployeeTimeLogs> timeLogs;
         private List<LocalDate> payDates;
-        
+
         private int currentPage = 1;
-        private final int rowsPerPage = 15;       
- 
+        private final int rowsPerPage = 15;
+
+        private static final DateTimeFormatter TIMELOG_FMT =
+                DateTimeFormatter.ofPattern("MM/dd/uuuu", Locale.US).withResolverStyle(ResolverStyle.STRICT);
+
+        private static LocalDate parseTimelogDate(String raw) {
+            return LocalDate.parse(raw == null ? "" : raw.trim(), TIMELOG_FMT);
+        }
+
     public PayrollVer2() {
         initComponents();
         initTable();
         loadData();
         setupMouseClickListener();
     }
-    
-    private void initTable() {   
+
+    private void initTable() {
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
         for (int i = 0; i < payrolList.getColumnCount(); i++) {
             payrolList.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
-        
-        payrolList.getTableHeader().setReorderingAllowed(false); // Prevent reordering
+
+        payrolList.getTableHeader().setReorderingAllowed(false);
         payrolList.getTableHeader().setResizingAllowed(false);
-        
+
         if (payrolList.getColumnModel().getColumnCount() >= 6) {
-            payrolList.getColumnModel().getColumn(0).setPreferredWidth(250); // Pay Period
-            payrolList.getColumnModel().getColumn(1).setPreferredWidth(150); // Pay Date
-            payrolList.getColumnModel().getColumn(2).setPreferredWidth(80); // Employees
-            payrolList.getColumnModel().getColumn(3).setPreferredWidth(150); // Total Payment
-            payrolList.getColumnModel().getColumn(4).setPreferredWidth(80); // Status
-            payrolList.getColumnModel().getColumn(5).setPreferredWidth(80); // Action
+            payrolList.getColumnModel().getColumn(0).setPreferredWidth(250);
+            payrolList.getColumnModel().getColumn(1).setPreferredWidth(150);
+            payrolList.getColumnModel().getColumn(2).setPreferredWidth(80);
+            payrolList.getColumnModel().getColumn(3).setPreferredWidth(150);
+            payrolList.getColumnModel().getColumn(4).setPreferredWidth(80);
+            payrolList.getColumnModel().getColumn(5).setPreferredWidth(80);
         }
-        
+
         payrolList.getColumnModel().getColumn(5).setCellRenderer(new MyRender());
     }
 
     private void loadData() {
-        employees = DataHandler.readEmployeeDetails();   
-        timeLogs = DataHandler.readEmployeeTimeLogs();   
+        employees = DataHandler.readEmployeeDetails();
+        timeLogs = DataHandler.readEmployeeTimeLogs();
         payDates = getPayDatesFromTimeLogs();
         loadPayRuns();
     }
@@ -77,21 +81,18 @@ public class PayrollVer2 extends javax.swing.JPanel {
                 int row = payrolList.rowAtPoint(evt.getPoint());
                 int col = payrolList.columnAtPoint(evt.getPoint());
 
-               
                 if (col == 5) {
                     String action = (String) payrolList.getValueAt(row, col);
                     if ("View".equalsIgnoreCase(action)) {
-                        String payPeriod = (String) payrolList.getValueAt(row, 0); // Column 0 = Pay Period
-                        String payDate = (String) payrolList.getValueAt(row, 1);   // Column 1 = Pay Date
-
-                        // Open the detailed payroll view for this pay period
+                        String payPeriod = (String) payrolList.getValueAt(row, 0);
+                        String payDate = (String) payrolList.getValueAt(row, 1);
                         openDisplayPayrollList(payPeriod, payDate);
                     }
                 }
             }
-        });       
+        });
     }
-    
+
     private void loadPayRuns() {
         if (payDates == null || payDates.isEmpty()) {
             lblPageInfo.setText("No available pay periods.");
@@ -99,9 +100,9 @@ public class PayrollVer2 extends javax.swing.JPanel {
             btnNext.setEnabled(false);
             return;
         }
-        
+
         DefaultTableModel model = (DefaultTableModel) payrolList.getModel();
-        model.setRowCount(0); // Clear table
+        model.setRowCount(0);
 
         DateTimeFormatter fullDateFmt = DateTimeFormatter.ofPattern("MMMM d, yyyy");
 
@@ -121,7 +122,7 @@ public class PayrollVer2 extends javax.swing.JPanel {
 
             int employeeCount = countEmployeesPaidOn(cutoffDate);
             double totalPayment = calculateTotalPaymentOn(cutoffDate);
-           
+
             String status = (employeeCount > 0) ? "Completed" : "Pending";
             String action = (employeeCount > 0) ? "View" : "Run Payroll";
 
@@ -135,7 +136,6 @@ public class PayrollVer2 extends javax.swing.JPanel {
             });
         }
 
-        // Update page label and enable/disable buttons
         lblPageInfo.setText("Page " + currentPage + " of " + totalPages);
         btnPrev.setEnabled(currentPage > 1);
         btnNext.setEnabled(currentPage < totalPages);
@@ -144,28 +144,28 @@ public class PayrollVer2 extends javax.swing.JPanel {
     private List<LocalDate> getPayDatesFromTimeLogs() {
         Set<LocalDate> payDates = new TreeSet<>();
         for (EmployeeTimeLogs log : timeLogs) {
-            LocalDate logDate = LocalDate.parse(log.getDate());
+            LocalDate logDate = parseTimelogDate(log.getDate());
             payDates.add(getCutoffForDate(logDate));
         }
         return new ArrayList<>(payDates);
     }
 
     private LocalDate getCutoffForDate(LocalDate date) {
-        return(date.getDayOfMonth() <= 15)
+        return (date.getDayOfMonth() <= 15)
                 ? LocalDate.of(date.getYear(), date.getMonth(), 15)
                 : YearMonth.of(date.getYear(), date.getMonth()).atEndOfMonth();
     }
-    
+
     private boolean isInPayPeriod(LocalDate logDate, LocalDate cutoffDate) {
         LocalDate start = (cutoffDate.getDayOfMonth() == 15)
                  ? cutoffDate.withDayOfMonth(1)
                  : cutoffDate.withDayOfMonth(16);
         return !logDate.isBefore(start) && !logDate.isAfter(cutoffDate);
-        }    
-    
+    }
+
     private int countEmployeesPaidOn(LocalDate cutoff) {
         return (int) timeLogs.stream()
-                .filter(log -> isInPayPeriod(LocalDate.parse(log.getDate()), cutoff))
+                .filter(log -> isInPayPeriod(parseTimelogDate(log.getDate()), cutoff))
                 .map(EmployeeTimeLogs::getEmployeeNumber)
                 .distinct()
                 .count();
@@ -173,14 +173,14 @@ public class PayrollVer2 extends javax.swing.JPanel {
 
     private double calculateTotalPaymentOn(LocalDate cutoff) {
         double total = 0.0;
-        
+
         String monthYear = cutoff.format(DateTimeFormatter.ofPattern("MM-yyyy"));
         int payPeriod = (cutoff.getDayOfMonth() == 15) ? 1 : 2;
-        
+
         for (EmployeeDetails emp : employees) {
             List<EmployeeTimeLogs> empLogs = timeLogs.stream()
                 .filter(log -> log.getEmployeeNumber().equals(emp.getEmployeeNumber()))
-                .filter(log -> isInPayPeriod(LocalDate.parse(log.getDate()), cutoff))
+                .filter(log -> isInPayPeriod(parseTimelogDate(log.getDate()), cutoff))
                 .toList();
 
             if (!empLogs.isEmpty()) {
@@ -189,22 +189,28 @@ public class PayrollVer2 extends javax.swing.JPanel {
         }
         return total;
     }
-    
-    private void openDisplayPayrollList(String payPeriod, String payDate) {
-        DisplayPayruns displayPanel = new DisplayPayruns();     
-        
-        displayPanel.setPayPeriod(payPeriod);  // Set "January 1 - January 15"
-        displayPanel.setPayDay(payDate);       // Set actual pay date (e.g., "January 15, 2025")
-        displayPanel.setPayrollType("Semi-Monthly");
 
-        // Parse pay date string to LocalDate
-        LocalDate cutoffDate = LocalDate.parse(payDate, DateTimeFormatter.ofPattern("MMMM d, yyyy"));
-        int employeeCount = countEmployeesPaidOn(cutoffDate);
-        displayPanel.setTotalEmployees(employeeCount);
-        displayPanel.setTableData(payDate);  
+   private void openDisplayPayrollList(String payPeriod, String payDate) {
+    DisplayPayruns displayPanel = new DisplayPayruns();
 
-        Dashboard.showPanel(displayPanel);
-    }
+    displayPanel.setPayPeriod(payPeriod);
+    displayPanel.setPayDay(payDate);
+    displayPanel.setPayrollType("Semi-Monthly");
+
+    DateTimeFormatter displayFmt = DateTimeFormatter.ofPattern("MMMM d, yyyy", Locale.US);
+    DateTimeFormatter rawFmt = DateTimeFormatter.ofPattern("MM/dd/uuuu", Locale.US);
+
+    LocalDate cutoffDate = LocalDate.parse(payDate, displayFmt);
+
+    int employeeCount = countEmployeesPaidOn(cutoffDate);
+    displayPanel.setTotalEmployees(employeeCount);
+
+    String cutoffRaw = cutoffDate.format(rawFmt);
+    displayPanel.setTableData(cutoffRaw);
+
+    Dashboard.showPanel(displayPanel);
+}
+
 
 
     
