@@ -207,7 +207,6 @@ public class EmployeePayruns extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(255, 255, 255));
         setMaximumSize(null);
-        setMinimumSize(null);
         setPreferredSize(new java.awt.Dimension(1000, 485));
 
         lblPageInfo.setText("Page 1 of 1");

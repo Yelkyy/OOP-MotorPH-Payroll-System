@@ -99,6 +99,11 @@ public class EmployeeTimeLogs {
             return 0.0;
         }
     }
+    
+    public LocalDate getDateValue() {
+        return date;
+    }
+
 
     @Override
     public String toString() {

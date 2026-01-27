@@ -1,10 +1,15 @@
 package motorph.utils;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 import java.util.List;
+import java.util.Locale;
+
 import motorph.model.EmployeeDetails;
 import motorph.model.EmployeeTimeLogs;
 import motorph.repository.DataHandler;
-
 
 public class EmployeeDataUtil {
 
@@ -27,14 +32,38 @@ public class EmployeeDataUtil {
             .orElse(null);
     }
 
-    // Get time logs for a specific employee
+    // Get time logs for a specific employee (ALL logs)
     public static List<EmployeeTimeLogs> getTimeLogsForEmployee(String empId) {
         return getAllTimeLogs()
             .stream()
             .filter(log -> log.getEmployeeNumber().equals(empId))
             .toList();
     }
-    
+
+    // Get time logs for a specific employee within a cutoff pay period
+    public static List<EmployeeTimeLogs> getTimeLogsForEmployee(String empId, LocalDate cutoffDate) {
+        LocalDate startDate = (cutoffDate.getDayOfMonth() <= 15)
+                ? cutoffDate.withDayOfMonth(1)
+                : cutoffDate.withDayOfMonth(16);
+
+        return getAllTimeLogs()
+            .stream()
+            .filter(log -> log.getEmployeeNumber().equals(empId))
+            .filter(log -> {
+                LocalDate d = log.getDateValue();
+                return d != null && !d.isBefore(startDate) && !d.isAfter(cutoffDate);
+            })
+            .toList();
+    }
+
+
+    // Optional helper (if you ever need the cutoff from a date)
+    public static LocalDate getCutoffForDate(LocalDate date) {
+        return (date.getDayOfMonth() <= 15)
+                ? LocalDate.of(date.getYear(), date.getMonth(), 15)
+                : YearMonth.of(date.getYear(), date.getMonth()).atEndOfMonth();
+    }
+
     public static class DeductionBreakdown {
         public double sss;
         public double philhealth;
@@ -44,5 +73,4 @@ public class EmployeeDataUtil {
         public double totalDeductions;
         public double netPay;
     }
-
 }

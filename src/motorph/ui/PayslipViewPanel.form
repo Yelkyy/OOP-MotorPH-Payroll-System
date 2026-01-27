@@ -405,12 +405,12 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
-                <Property name="text" type="java.lang.String" value="EMPLOYEE NUMBER"/>
+                <Property name="text" type="java.lang.String" value="EMPLOYEE NAME"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
-                <Property name="text" type="java.lang.String" value="EMPLOYEE NAME"/>
+                <Property name="text" type="java.lang.String" value="EMPLOYEE NUMBER"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">

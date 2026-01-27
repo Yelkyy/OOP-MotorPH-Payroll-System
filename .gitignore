@@ -1,4 +1,8 @@
-/dist/
 /build/
-/bin/
+/dist/
+/nbproject/private/
+/out/
+/target/
 *.class
+*.log
+.DS_Store

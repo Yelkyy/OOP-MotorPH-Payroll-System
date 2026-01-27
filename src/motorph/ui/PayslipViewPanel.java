@@ -40,12 +40,18 @@ public class PayslipViewPanel extends JPanel {
     
     public void setEmployeeId(String empId) {
         this.employeeId = empId;
-        loadEmployeeData();
+        if (this.payDate != null && !this.payDate.isBlank()) {
+            loadEmployeeData();
+        }
     }
     
     public void setPayDate(String payDate) {
         this.payDate = payDate;
         payrollDate.setText(payDate);
+    
+        if (this.employeeId != null && !this.employeeId.isBlank()) {
+            loadEmployeeData();
+        }
     }
     
     public void setPayPeriod(String period) {
@@ -78,12 +84,12 @@ public class PayslipViewPanel extends JPanel {
                                 + emp.getClothingAllowance();
             totalCompValue.setText(formatCurrency(totalComp));
 
-            List<EmployeeTimeLogs> logs = EmployeeDataUtil.getTimeLogsForEmployee(employeeId);
-
-            // Derive monthYear and payPeriod
-            LocalDate date = parsePayDate(payDate);
-            String monthYear = date.format(DateTimeFormatter.ofPattern("MM-yyyy"));
-            int payPeriod = (date.getDayOfMonth() <= 15) ? 1 : 2;
+            LocalDate cutoff = parsePayDate(payDate);
+            String monthYear = cutoff.format(DateTimeFormatter.ofPattern("MM-yyyy"));
+            int payPeriod = (cutoff.getDayOfMonth() <= 15) ? 1 : 2;
+            
+            // only logs for that cutoff period
+            List<EmployeeTimeLogs> logs = EmployeeDataUtil.getTimeLogsForEmployee(employeeId, cutoff);
 
             // Calculate breakdown
             DeductionBreakdown breakdown = PayrollService.computeDeductions(emp, logs, monthYear, payPeriod);
@@ -331,9 +337,9 @@ public class PayslipViewPanel extends JPanel {
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel4.setText("EMPLOYEE NUMBER");
+        jLabel4.setText("EMPLOYEE NAME");
 
-        jLabel5.setText("EMPLOYEE NAME");
+        jLabel5.setText("EMPLOYEE NUMBER");
 
         jLabel6.setText("PAYROLL DATE");
 
