@@ -1,4 +1,4 @@
-package motorph.employee;
+package motorph.model.core;
 
 import java.util.List;
 import motorph.model.EmployeeDetails;

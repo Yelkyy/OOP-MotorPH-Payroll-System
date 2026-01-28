@@ -1,9 +1,8 @@
 package motorph.ui;
 
-import java.util.Map;
 import javax.swing.JOptionPane;
 import motorph.model.User;
-import motorph.repository.DataHandler;
+import motorph.model.Role;
 import motorph.utils.UserAuthentication;
 
 public class LoginScreen extends javax.swing.JFrame {
@@ -14,16 +13,6 @@ public class LoginScreen extends javax.swing.JFrame {
 
     }
     
-    private void updateLoginButtonLabel() {
-        String selectedLevel = (String) userLevelDd.getSelectedItem();
-        if ("Admin".equalsIgnoreCase(selectedLevel)) {
-            loginButton.setText("Login as Admin");
-        } else if ("User".equalsIgnoreCase(selectedLevel)) {
-            loginButton.setText("Login");
-        } else {
-            loginButton.setText("Login");
-        }
-    }
 
 
     
@@ -42,8 +31,6 @@ public class LoginScreen extends javax.swing.JFrame {
         inputPassword = new javax.swing.JPasswordField();
         loginButton = new javax.swing.JButton();
         showPWBox = new javax.swing.JCheckBox();
-        userLevelLbl = new javax.swing.JLabel();
-        userLevelDd = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MOTORPH LOGIN");
@@ -135,19 +122,6 @@ public class LoginScreen extends javax.swing.JFrame {
             }
         });
 
-        userLevelLbl.setBackground(new java.awt.Color(102, 102, 102));
-        userLevelLbl.setText("User level");
-
-        userLevelDd.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "Admin", "User" }));
-        userLevelDd.setMaximumSize(null);
-        userLevelDd.setMinimumSize(null);
-        userLevelDd.setPreferredSize(new java.awt.Dimension(64, 22));
-        userLevelDd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                userLevelDdActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout leftLayout = new javax.swing.GroupLayout(left);
         left.setLayout(leftLayout);
         leftLayout.setHorizontalGroup(
@@ -159,13 +133,11 @@ public class LoginScreen extends javax.swing.JFrame {
             .addGroup(leftLayout.createSequentialGroup()
                 .addGap(38, 38, 38)
                 .addGroup(leftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(userLevelLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(showPWBox, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(inputEmail)
                     .addComponent(inputPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)
                     .addComponent(userLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(passwordLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(userLevelDd, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -174,11 +146,7 @@ public class LoginScreen extends javax.swing.JFrame {
             .addGroup(leftLayout.createSequentialGroup()
                 .addGap(46, 46, 46)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addComponent(userLevelLbl)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(userLevelDd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                .addGap(44, 44, 44)
                 .addComponent(userLbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(inputEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -188,7 +156,7 @@ public class LoginScreen extends javax.swing.JFrame {
                 .addComponent(inputPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(showPWBox)
-                .addGap(37, 37, 37)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
                 .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(75, Short.MAX_VALUE))
         );
@@ -220,59 +188,39 @@ public class LoginScreen extends javax.swing.JFrame {
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         String email = inputEmail.getText().trim();
         String password = new String(inputPassword.getPassword()).trim();
-        String selectedLevel = (String) userLevelDd.getSelectedItem();
-
-        if (selectedLevel.equals("None")) {
-            JOptionPane.showMessageDialog(this, "Please select a valid user level.",
-                    "User Level Required", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
 
         if (email.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter both username and password.",
-                    "Input Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "Please enter both username and password.",
+                    "Input Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         User user = UserAuthentication.authenticate(email, password);
 
-        if (user != null) {
-            // Check if user role matches the selected user level
-            boolean isValid = false;
-
-            if ("Admin".equalsIgnoreCase(selectedLevel) && user.isAdmin()) {
-                isValid = true;
-            } else if ("User".equalsIgnoreCase(selectedLevel) && (user.isHR() || user.isEmployee())) {
-                isValid = true;
-            }
-
-            if (!isValid) {
-                JOptionPane.showMessageDialog(this,
-                        "User level mismatch",
-                        "Login Failed", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            // Launch appropriate dashboard
-            if (user.isAdmin()) {
-                motorph.ui.Dashboard dashboardFrame = new motorph.ui.Dashboard(); 
-                dashboardFrame.personalize(user.getFullName());
-                dashboardFrame.setVisible(true);
-            } else if (user.isHR()) {
-                motorph.ui.Dashboard dashboardFrame = new motorph.ui.Dashboard();
-                dashboardFrame.personalize(user.getFullName());
-                dashboardFrame.setVisible(true);
-            } else if (user.isEmployee()) {
-                motorph.ui.employeeRole.Dashboard empDash = new motorph.ui.employeeRole.Dashboard(user);
-                empDash.setVisible(true);
-            }
-
-            this.dispose(); // Close login screen
-
-        } else {
-            JOptionPane.showMessageDialog(this, "Invalid username or password.",
-                    "Login Failed", JOptionPane.ERROR_MESSAGE);
+        if (user == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Invalid username or password.",
+                    "Login Failed",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
         }
+
+        if (user.getRole() != Role.ADMIN) {
+            JOptionPane.showMessageDialog(this,
+                    "Access restricted. Admin login only.",
+                    "Access Denied",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        motorph.ui.Dashboard dashboardFrame = new motorph.ui.Dashboard();
+        dashboardFrame.personalize(user.getFullName());
+        dashboardFrame.setVisible(true);
+
+        this.dispose(); 
+
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void loginButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_loginButtonKeyPressed
@@ -292,10 +240,6 @@ public class LoginScreen extends javax.swing.JFrame {
             inputPassword.setEchoChar('•');
         }
     }//GEN-LAST:event_showPWBoxActionPerformed
-
-    private void userLevelDdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userLevelDdActionPerformed
-        updateLoginButtonLabel();
-    }//GEN-LAST:event_userLevelDdActionPerformed
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -310,7 +254,5 @@ public class LoginScreen extends javax.swing.JFrame {
     private javax.swing.JPanel right;
     private javax.swing.JCheckBox showPWBox;
     private javax.swing.JLabel userLbl;
-    private javax.swing.JComboBox<String> userLevelDd;
-    private javax.swing.JLabel userLevelLbl;
     // End of variables declaration//GEN-END:variables
 }
