@@ -5,6 +5,13 @@
       "type": "java",
       "name": "App",
       "request": "launch",
+      "mainClass": "motorph.app.App",
+      "projectName": "GRP9-MotorPH-Employee-Application_399150e1"
+    },
+    {
+      "type": "java",
+      "name": "App",
+      "request": "launch",
       "mainClass": "motorph.ui.main.App",
       "projectName": "GRP9-MotorPH-Employee-Application_d4a488cf"
     },

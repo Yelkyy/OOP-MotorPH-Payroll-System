@@ -1,13 +1,23 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package motorph.model.users;
 
-/**
- *
- * @author jmbpj
- */
-public class EmployeeUser {
-    
+import java.util.List;
+
+import motorph.model.Role;
+import motorph.model.User;
+
+public class EmployeeUser extends User {
+    public EmployeeUser(String username, String firstName, String lastName, String employeeId) {
+        super(username, firstName, lastName, Role.EMPLOYEE, employeeId);
+    }
+
+    @Override
+    public List<String> getMenuItems() {
+        return List.of(
+                "View/Edit Personal",
+                "Change Password",
+                "Record Attendance",
+                "Submit Leave Request",
+                "View Payslip",
+                "Print Payslip");
+    }
 }

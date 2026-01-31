@@ -1,4 +1,5 @@
-package motorph.ui.main;
+package motorph.app;
+
 // Main class to launch the MotorPH application.
 // This initializes and displays the login screen when the application starts.
 import javax.swing.UIManager;
@@ -13,26 +14,25 @@ public class App {
      * 
      * @param args Command-line arguments (not used).
      */
-    public static void main(String[] args){
-      
-        try {          
+    public static void main(String[] args) {
+
+        try {
             UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
-        
+
         // Create an instance of the login screen
         LoginScreen LoginF = new LoginScreen();
-        
+
         // Make the login screen visible
         LoginF.setVisible(true);
-        
+
         // Resize the frame to fit its components
         LoginF.pack();
-        
+
         // Center the login screen on the screen
         LoginF.setLocationRelativeTo(null);
     }
-    
-    
+
 }
