@@ -18,30 +18,32 @@ public class DataHandler {
     private static final Path LOGIN_CSV = Paths.get("resources", "MotorPH Users.csv");
 
     private static final String[] EMPLOYEE_CSV_HEADER = {
-        "Employee #", "Last Name", "First Name", "Birthday", "Address", "Phone Number",
-        "SSS #", "PhilHealth #", "TIN #", "Pag-IBIG #", "Status", "Position",
-        "Immediate Supervisor", "Basic Salary", "Rice Subsidy", "Phone Allowance",
-        "Clothing Allowance", " Gross Semi-Monthly Rate", "Hourly Rate"
+            "Employee #", "Last Name", "First Name", "Birthday", "Address", "Phone Number",
+            "SSS #", "PhilHealth #", "TIN #", "Pag-IBIG #", "Status", "Position",
+            "Immediate Supervisor", "Basic Salary", "Rice Subsidy", "Phone Allowance",
+            "Clothing Allowance", " Gross Semi-Monthly Rate", "Hourly Rate"
     };
 
     /**
      * Reads employee details from the CSV file.
+     * 
      * @return List of EmployeeDetails objects.
      */
     public static List<EmployeeDetails> readEmployeeDetails() {
         List<EmployeeDetails> employees = new ArrayList<>();
 
         try (Reader reader = Files.newBufferedReader(CSV_FILE);
-             CSVReader csvReader = new CSVReaderBuilder(reader)
-                     .withCSVParser(new CSVParserBuilder()
-                             .withSeparator(',')
-                             .withIgnoreQuotations(false)
-                             .build())
-                     .build()) {
+                CSVReader csvReader = new CSVReaderBuilder(reader)
+                        .withCSVParser(new CSVParserBuilder()
+                                .withSeparator(',')
+                                .withIgnoreQuotations(false)
+                                .build())
+                        .build()) {
 
             List<String[]> records = csvReader.readAll();
 
-            if (records.isEmpty()) return employees;
+            if (records.isEmpty())
+                return employees;
 
             records.remove(0); // Remove header row
 
@@ -56,8 +58,7 @@ public class DataHandler {
                         record[7].trim(), record[8].trim(), record[9].trim(), record[10], record[11],
                         record[12], parseDoubleSafe(record[13]), parseDoubleSafe(record[14]),
                         parseDoubleSafe(record[15]), parseDoubleSafe(record[16]),
-                        parseDoubleSafe(record[17]), parseDoubleSafe(record[18])
-                );
+                        parseDoubleSafe(record[17]), parseDoubleSafe(record[18]));
 
                 employees.add(employee);
             }
@@ -70,6 +71,7 @@ public class DataHandler {
 
     /**
      * Reads employee time logs from the CSV file.
+     * 
      * @return List of EmployeeTimeLogs objects.
      */
     public static List<EmployeeTimeLogs> readEmployeeTimeLogs() {
@@ -83,7 +85,8 @@ public class DataHandler {
             while ((line = br.readLine()) != null) {
                 lineNum++;
                 line = line.trim();
-                if (line.isEmpty()) continue;
+                if (line.isEmpty())
+                    continue;
 
                 String[] parts = line.split(",", -1);
 
@@ -95,18 +98,18 @@ public class DataHandler {
 
                 // Malformed row check
                 if (parts.length != 6) {
-                    System.out.println("⚠️ Skipping malformed time log at line " + lineNum + ": " + Arrays.toString(parts));
+                    System.out.println(
+                            "⚠️ Skipping malformed time log at line " + lineNum + ": " + Arrays.toString(parts));
                     continue;
                 }
 
                 EmployeeTimeLogs log = new EmployeeTimeLogs(
-                    parts[0].trim(),
-                    parts[1].trim(),
-                    parts[2].trim(),
-                    parts[3].trim(),
-                    parts[4].trim(),
-                    parts[5].trim()
-                );
+                        parts[0].trim(),
+                        parts[1].trim(),
+                        parts[2].trim(),
+                        parts[3].trim(),
+                        parts[4].trim(),
+                        parts[5].trim());
 
                 timeLogs.add(log);
             }
@@ -118,23 +121,20 @@ public class DataHandler {
         return timeLogs;
     }
 
-
-
-
     /**
      * Appends a new employee time log entry to the CSV file.
      */
     public static void logEmployeeTime(String empId, String lastName, String firstName, String date,
-                                       String logIn, String logOut) {
+            String logIn, String logOut) {
         File file = TIME_LOG_CSV.toFile();
         boolean fileExists = file.exists();
 
         try (Writer writer = new FileWriter(file, true);
-             CSVWriter csvWriter = new CSVWriter(writer,
-                     CSVWriter.DEFAULT_SEPARATOR,
-                     CSVWriter.DEFAULT_QUOTE_CHARACTER,
-                     CSVWriter.DEFAULT_ESCAPE_CHARACTER,
-                     CSVWriter.RFC4180_LINE_END)) {
+                CSVWriter csvWriter = new CSVWriter(writer,
+                        CSVWriter.DEFAULT_SEPARATOR,
+                        CSVWriter.DEFAULT_QUOTE_CHARACTER,
+                        CSVWriter.DEFAULT_ESCAPE_CHARACTER,
+                        CSVWriter.RFC4180_LINE_END)) {
 
             if (!fileExists) {
                 csvWriter.writeNext(new String[] {
@@ -142,7 +142,7 @@ public class DataHandler {
                 });
             }
 
-            csvWriter.writeNext(new String[] {empId, lastName, firstName, date, logIn, logOut});
+            csvWriter.writeNext(new String[] { empId, lastName, firstName, date, logIn, logOut });
             System.out.println("✅ Time log recorded for Employee #" + empId);
 
         } catch (IOException e) {
@@ -151,15 +151,16 @@ public class DataHandler {
     }
 
     /**
-     * Writes the full list of employees back to the CSV file, overwriting existing content.
+     * Writes the full list of employees back to the CSV file, overwriting existing
+     * content.
      */
     public static void writeEmployeeData(List<EmployeeDetails> employees) {
         try (Writer writer = new FileWriter(CSV_FILE.toFile());
-             CSVWriter csvWriter = new CSVWriter(writer,
-                     CSVWriter.DEFAULT_SEPARATOR,
-                     CSVWriter.DEFAULT_QUOTE_CHARACTER,
-                     CSVWriter.DEFAULT_ESCAPE_CHARACTER,
-                     CSVWriter.RFC4180_LINE_END)) {
+                CSVWriter csvWriter = new CSVWriter(writer,
+                        CSVWriter.DEFAULT_SEPARATOR,
+                        CSVWriter.DEFAULT_QUOTE_CHARACTER,
+                        CSVWriter.DEFAULT_ESCAPE_CHARACTER,
+                        CSVWriter.RFC4180_LINE_END)) {
 
             csvWriter.writeNext(EMPLOYEE_CSV_HEADER);
 
@@ -179,14 +180,14 @@ public class DataHandler {
      */
     public static void addEmployeeToCSV(EmployeeDetails emp) {
         try (Writer writer = new FileWriter(CSV_FILE.toFile(), true);
-             CSVWriter csvWriter = new CSVWriter(writer,
-                     CSVWriter.DEFAULT_SEPARATOR,
-                     CSVWriter.DEFAULT_QUOTE_CHARACTER,
-                     CSVWriter.DEFAULT_ESCAPE_CHARACTER,
-                     CSVWriter.RFC4180_LINE_END)) {
+                CSVWriter csvWriter = new CSVWriter(writer,
+                        CSVWriter.DEFAULT_SEPARATOR,
+                        CSVWriter.DEFAULT_QUOTE_CHARACTER,
+                        CSVWriter.DEFAULT_ESCAPE_CHARACTER,
+                        CSVWriter.RFC4180_LINE_END)) {
 
             csvWriter.writeNext(emp.toCSVArray());
-            System.out.println("✅ Employee added to CSV: " + emp.getEmployeeId());
+            System.out.println("✅ Employee added to CSV: " + emp.getEmployeeNumber());
 
         } catch (IOException e) {
             System.err.println("Error adding employee: " + e.getMessage());
@@ -195,6 +196,7 @@ public class DataHandler {
 
     /**
      * Generates a new unique employee ID by incrementing the highest existing ID.
+     * 
      * @return New employee ID as a String.
      */
     public static String generateNewEmpId() {
@@ -203,8 +205,9 @@ public class DataHandler {
 
         for (EmployeeDetails emp : employees) {
             try {
-                int id = Integer.parseInt(emp.getEmployeeId());
-                if (id > maxId) maxId = id;
+                int id = Integer.parseInt(emp.getEmployeeNumber());
+                if (id > maxId)
+                    maxId = id;
             } catch (NumberFormatException e) {
                 // Ignore malformed IDs
             }
@@ -219,7 +222,7 @@ public class DataHandler {
     public static void removeEmployeeFromCSV(String employeeNumber) {
         List<EmployeeDetails> employees = readEmployeeDetails();
 
-        boolean removed = employees.removeIf(emp -> emp.getEmployeeId().equals(employeeNumber));
+        boolean removed = employees.removeIf(emp -> emp.getEmployeeNumber().equals(employeeNumber));
 
         if (removed) {
             writeEmployeeData(employees);
@@ -237,7 +240,7 @@ public class DataHandler {
         boolean updated = false;
 
         for (int i = 0; i < employees.size(); i++) {
-            if (employees.get(i).getEmployeeId().equals(updatedEmployee.getEmployeeId())) {
+            if (employees.get(i).getEmployeeNumber().equals(updatedEmployee.getEmployeeNumber())) {
                 employees.set(i, updatedEmployee);
                 updated = true;
                 break;
@@ -246,14 +249,15 @@ public class DataHandler {
 
         if (updated) {
             writeEmployeeData(employees);
-            System.out.println("✅ Employee #" + updatedEmployee.getEmployeeId() + " updated.");
+            System.out.println("✅ Employee #" + updatedEmployee.getEmployeeNumber() + " updated.");
         } else {
-            System.out.println("⚠️ Employee #" + updatedEmployee.getEmployeeId() + " not found.");
+            System.out.println("⚠️ Employee #" + updatedEmployee.getEmployeeNumber() + " not found.");
         }
     }
 
     /**
-     * Parses a String to double safely, returning 0.0 for invalid or missing values.
+     * Parses a String to double safely, returning 0.0 for invalid or missing
+     * values.
      */
     private static double parseDoubleSafe(String value) {
         if (value == null || value.trim().isEmpty() || value.equalsIgnoreCase("N/A")) {
@@ -265,9 +269,10 @@ public class DataHandler {
             return 0.0;
         }
     }
-    
-        /**
+
+    /**
      * Removes all time logs related to a specific employee.
+     * 
      * @param employeeNumber Employee number to filter logs by.
      */
     public static void deleteTimeLogsByEmployeeNumber(String employeeNumber) {
@@ -282,21 +287,21 @@ public class DataHandler {
             System.out.println("⚠️ No time logs found for Employee #" + employeeNumber);
         }
     }
-    
+
     /**
      * Writes the list of employee time logs back to the CSV.
      */
     public static void writeEmployeeTimeLogs(List<EmployeeTimeLogs> logs) {
         try (Writer writer = Files.newBufferedWriter(TIME_LOG_CSV);
-             CSVWriter csvWriter = new CSVWriter(writer,
-                     CSVWriter.DEFAULT_SEPARATOR,
-                     CSVWriter.DEFAULT_QUOTE_CHARACTER,
-                     CSVWriter.DEFAULT_ESCAPE_CHARACTER,
-                     CSVWriter.RFC4180_LINE_END)) {
+                CSVWriter csvWriter = new CSVWriter(writer,
+                        CSVWriter.DEFAULT_SEPARATOR,
+                        CSVWriter.DEFAULT_QUOTE_CHARACTER,
+                        CSVWriter.DEFAULT_ESCAPE_CHARACTER,
+                        CSVWriter.RFC4180_LINE_END)) {
 
             // Write header
             csvWriter.writeNext(new String[] {
-                "Employee #", "Last Name", "First Name", "Date", "Log In", "Log Out"
+                    "Employee #", "Last Name", "First Name", "Date", "Log In", "Log Out"
             });
 
             for (EmployeeTimeLogs log : logs) {
@@ -308,9 +313,10 @@ public class DataHandler {
             System.err.println("Error writing time logs: " + e.getMessage());
         }
     }
-    
+
     /**
      * Loads user credentials from the login CSV file.
+     * 
      * @return Map of username-password pairs.
      */
     public static Map<String, String> loadUserCredentials() {
@@ -338,7 +344,7 @@ public class DataHandler {
 
         return credentials;
     }
-    
+
     public static String getFirstNameByEmail(String email) {
         try (BufferedReader br = Files.newBufferedReader(LOGIN_CSV)) {
             String line;
@@ -362,5 +368,4 @@ public class DataHandler {
         return "User";
     }
 
-    
 }

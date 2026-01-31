@@ -1,13 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package motorph.contracts;
 
-/**
- *
- * @author jmbpj
- */
-public class EmployeeCrudOperations {
-    
+import java.util.List;
+import motorph.model.EmployeeDetails;
+
+public interface EmployeeCrudOperations {
+    void addEmployee(EmployeeDetails employee);
+
+    void updateEmployee(EmployeeDetails employee);
+
+    void deleteEmployee(String employeeNumber);
+
+    EmployeeDetails findEmployeeById(String employeeNumber);
+
+    List<EmployeeDetails> findAllEmployees();
 }

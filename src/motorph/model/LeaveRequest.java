@@ -1,4 +1,4 @@
-package motorph.utils;
+package motorph.model;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -10,7 +10,7 @@ public class LeaveRequest {
     private Date from;
     private Date to;
     private String reason;
-    private String Leavetype; 
+    private String Leavetype;
     private String status;
 
     public LeaveRequest(Date requestDate, Date from, Date to, String reason, String Leavetype, String status) {
@@ -23,33 +23,33 @@ public class LeaveRequest {
     }
 
     // Getters
-    public Date getRequestDate() { 
-        return requestDate; 
+    public Date getRequestDate() {
+        return requestDate;
     }
-    
-    public Date getFrom() { 
-        return from; 
+
+    public Date getFrom() {
+        return from;
     }
-    
-    public Date getTo() { 
-        return to; 
+
+    public Date getTo() {
+        return to;
     }
-    
-    public String getNote() { 
-        return reason; 
+
+    public String getNote() {
+        return reason;
     }
-    
-    public String getType() { 
-        return Leavetype; 
+
+    public String getType() {
+        return Leavetype;
     }
-    
-    public String getStatus() { 
-        return status; 
+
+    public String getStatus() {
+        return status;
     }
 
     // Setters
-    public void setStatus(String status) { 
-        this.status = status; 
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     // CSV Save Method
@@ -63,11 +63,11 @@ public class LeaveRequest {
 
             // CSV format: EmployeeID,LeaveType,StartDate,EndDate,Reason,Status
             writer.append(employeeId).append(",")
-                  .append(leave.getType()).append(",")
-                  .append(from).append(",")
-                  .append(to).append(",")
-                  .append(leave.getNote().replace(",", " ")).append(",")
-                  .append(leave.getStatus()).append("\n");
+                    .append(leave.getType()).append(",")
+                    .append(from).append(",")
+                    .append(to).append(",")
+                    .append(leave.getNote().replace(",", " ")).append(",")
+                    .append(leave.getStatus()).append("\n");
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -9,14 +9,14 @@ public class User {
     private String firstName;
     private String lastName;
     private Role role;
-    private String employeeId;
+    private String employeeNumber;
 
-    public User(String username, String firstName, String lastName, Role role, String employeeId) {
+    public User(String username, String firstName, String lastName, Role role, String employeeNumber) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
-        this.employeeId = employeeId;
+        this.employeeNumber = employeeNumber;
     }
 
     // ===== Basic Getters =====
@@ -40,8 +40,8 @@ public class User {
         return role;
     }
 
-    public String getEmployeeId() {
-        return employeeId;
+    public String getemployeeNumber() {
+        return employeeNumber;
     }
 
     // ===== Menu / Role Behavior =====

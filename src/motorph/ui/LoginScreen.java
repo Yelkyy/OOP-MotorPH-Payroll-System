@@ -2,8 +2,8 @@ package motorph.ui;
 
 import javax.swing.JOptionPane;
 import motorph.model.User;
+import motorph.service.UserAuthenticationService;
 import motorph.model.Role;
-import motorph.utils.UserAuthentication;
 
 public class LoginScreen extends javax.swing.JFrame {
 
@@ -12,12 +12,10 @@ public class LoginScreen extends javax.swing.JFrame {
         setLocationRelativeTo(null);
 
     }
-    
 
-
-    
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
@@ -57,17 +55,16 @@ public class LoginScreen extends javax.swing.JFrame {
         javax.swing.GroupLayout rightLayout = new javax.swing.GroupLayout(right);
         right.setLayout(rightLayout);
         rightLayout.setHorizontalGroup(
-            rightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rightLayout.createSequentialGroup()
-                .addComponent(companylogo)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
+                rightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rightLayout.createSequentialGroup()
+                                .addComponent(companylogo)
+                                .addGap(0, 0, Short.MAX_VALUE)));
         rightLayout.setVerticalGroup(
-            rightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(rightLayout.createSequentialGroup()
-                .addComponent(companylogo, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 52, Short.MAX_VALUE))
-        );
+                rightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(rightLayout.createSequentialGroup()
+                                .addComponent(companylogo, javax.swing.GroupLayout.PREFERRED_SIZE, 448,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 52, Short.MAX_VALUE)));
 
         jPanel1.add(right);
         right.setBounds(0, 0, 400, 500);
@@ -125,41 +122,51 @@ public class LoginScreen extends javax.swing.JFrame {
         javax.swing.GroupLayout leftLayout = new javax.swing.GroupLayout(left);
         left.setLayout(leftLayout);
         leftLayout.setHorizontalGroup(
-            leftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, leftLayout.createSequentialGroup()
-                .addContainerGap(134, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(135, 135, 135))
-            .addGroup(leftLayout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addGroup(leftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(showPWBox, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(inputEmail)
-                    .addComponent(inputPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)
-                    .addComponent(userLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(passwordLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+                leftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, leftLayout.createSequentialGroup()
+                                .addContainerGap(134, Short.MAX_VALUE)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 121,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(135, 135, 135))
+                        .addGroup(leftLayout.createSequentialGroup()
+                                .addGap(38, 38, 38)
+                                .addGroup(
+                                        leftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(showPWBox, javax.swing.GroupLayout.PREFERRED_SIZE, 119,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(inputEmail)
+                                                .addComponent(inputPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 302,
+                                                        Short.MAX_VALUE)
+                                                .addComponent(userLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 87,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(passwordLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 108,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 144,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
         leftLayout.setVerticalGroup(
-            leftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(leftLayout.createSequentialGroup()
-                .addGap(46, 46, 46)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44)
-                .addComponent(userLbl)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(inputEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(passwordLbl)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(inputPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(showPWBox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
-                .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(75, Short.MAX_VALUE))
-        );
+                leftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(leftLayout.createSequentialGroup()
+                                .addGap(46, 46, 46)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 95,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(44, 44, 44)
+                                .addComponent(userLbl)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(inputEmail, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(passwordLbl)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(inputPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 22,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(showPWBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78,
+                                        Short.MAX_VALUE)
+                                .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 31,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(75, Short.MAX_VALUE)));
 
         jPanel1.add(left);
         left.setBounds(410, 0, 390, 500);
@@ -167,13 +174,13 @@ public class LoginScreen extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE));
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE));
 
         getAccessibleContext().setAccessibleName("LOGIN");
         getAccessibleContext().setAccessibleParent(this);
@@ -181,11 +188,11 @@ public class LoginScreen extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void inputEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputEmailActionPerformed
+    private void inputEmailActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_inputEmailActionPerformed
         loginButtonActionPerformed(null);
-    }//GEN-LAST:event_inputEmailActionPerformed
+    }// GEN-LAST:event_inputEmailActionPerformed
 
-    private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
+    private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_loginButtonActionPerformed
         String email = inputEmail.getText().trim();
         String password = new String(inputPassword.getPassword()).trim();
 
@@ -197,7 +204,7 @@ public class LoginScreen extends javax.swing.JFrame {
             return;
         }
 
-        User user = UserAuthentication.authenticate(email, password);
+        User user = UserAuthenticationService.authenticate(email, password);
 
         if (user == null) {
             JOptionPane.showMessageDialog(this,
@@ -219,28 +226,27 @@ public class LoginScreen extends javax.swing.JFrame {
         dashboardFrame.personalize(user.getFullName());
         dashboardFrame.setVisible(true);
 
-        this.dispose(); 
+        this.dispose();
 
-    }//GEN-LAST:event_loginButtonActionPerformed
+    }// GEN-LAST:event_loginButtonActionPerformed
 
-    private void loginButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_loginButtonKeyPressed
+    private void loginButtonKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_loginButtonKeyPressed
         if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
             loginButtonActionPerformed(null);
         }
-    }//GEN-LAST:event_loginButtonKeyPressed
+    }// GEN-LAST:event_loginButtonKeyPressed
 
-    private void inputPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputPasswordActionPerformed
+    private void inputPasswordActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_inputPasswordActionPerformed
         loginButtonActionPerformed(null);
-    }//GEN-LAST:event_inputPasswordActionPerformed
+    }// GEN-LAST:event_inputPasswordActionPerformed
 
-    private void showPWBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showPWBoxActionPerformed
+    private void showPWBoxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_showPWBoxActionPerformed
         if (showPWBox.isSelected()) {
             inputPassword.setEchoChar((char) 0);
-            } else {
+        } else {
             inputPassword.setEchoChar('•');
         }
-    }//GEN-LAST:event_showPWBoxActionPerformed
-    
+    }// GEN-LAST:event_showPWBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel companylogo;

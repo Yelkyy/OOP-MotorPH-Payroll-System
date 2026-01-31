@@ -1,4 +1,4 @@
-package motorph.model;
+package motorph.ui;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;

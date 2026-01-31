@@ -21,23 +21,23 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import motorph.ui.components.MyRender;
 
-public class PayrollVer2 extends javax.swing.JPanel {
+public class PayrunsPanel extends javax.swing.JPanel {
 
-        private List<EmployeeDetails> employees;
-        private List<EmployeeTimeLogs> timeLogs;
-        private List<LocalDate> payDates;
+    private List<EmployeeDetails> employees;
+    private List<EmployeeTimeLogs> timeLogs;
+    private List<LocalDate> payDates;
 
-        private int currentPage = 1;
-        private final int rowsPerPage = 15;
+    private int currentPage = 1;
+    private final int rowsPerPage = 15;
 
-        private static final DateTimeFormatter TIMELOG_FMT =
-                DateTimeFormatter.ofPattern("MM/dd/uuuu", Locale.US).withResolverStyle(ResolverStyle.STRICT);
+    private static final DateTimeFormatter TIMELOG_FMT = DateTimeFormatter.ofPattern("MM/dd/uuuu", Locale.US)
+            .withResolverStyle(ResolverStyle.STRICT);
 
-        private static LocalDate parseTimelogDate(String raw) {
-            return LocalDate.parse(raw == null ? "" : raw.trim(), TIMELOG_FMT);
-        }
+    private static LocalDate parseTimelogDate(String raw) {
+        return LocalDate.parse(raw == null ? "" : raw.trim(), TIMELOG_FMT);
+    }
 
-    public PayrollVer2() {
+    public PayrunsPanel() {
         initComponents();
         initTable();
         loadData();
@@ -114,8 +114,8 @@ public class PayrollVer2 extends javax.swing.JPanel {
 
         for (LocalDate cutoffDate : pagePayDates) {
             LocalDate startDate = (cutoffDate.getDayOfMonth() == 15)
-                ? cutoffDate.withDayOfMonth(1)
-                : cutoffDate.withDayOfMonth(16);
+                    ? cutoffDate.withDayOfMonth(1)
+                    : cutoffDate.withDayOfMonth(16);
 
             String payPeriod = startDate.format(fullDateFmt) + " - " + cutoffDate.format(fullDateFmt);
             String payDate = cutoffDate.format(fullDateFmt);
@@ -126,13 +126,13 @@ public class PayrollVer2 extends javax.swing.JPanel {
             String status = (employeeCount > 0) ? "Completed" : "Pending";
             String action = (employeeCount > 0) ? "View" : "Run Payroll";
 
-            model.addRow(new Object[]{
-                payPeriod,
-                payDate,
-                employeeCount,
-                "₱ " + String.format("%,.2f", totalPayment),
-                status,
-                action
+            model.addRow(new Object[] {
+                    payPeriod,
+                    payDate,
+                    employeeCount,
+                    "₱ " + String.format("%,.2f", totalPayment),
+                    status,
+                    action
             });
         }
 
@@ -158,8 +158,8 @@ public class PayrollVer2 extends javax.swing.JPanel {
 
     private boolean isInPayPeriod(LocalDate logDate, LocalDate cutoffDate) {
         LocalDate start = (cutoffDate.getDayOfMonth() == 15)
-                 ? cutoffDate.withDayOfMonth(1)
-                 : cutoffDate.withDayOfMonth(16);
+                ? cutoffDate.withDayOfMonth(1)
+                : cutoffDate.withDayOfMonth(16);
         return !logDate.isBefore(start) && !logDate.isAfter(cutoffDate);
     }
 
@@ -179,9 +179,9 @@ public class PayrollVer2 extends javax.swing.JPanel {
 
         for (EmployeeDetails emp : employees) {
             List<EmployeeTimeLogs> empLogs = timeLogs.stream()
-                .filter(log -> log.getEmployeeNumber().equals(emp.getEmployeeNumber()))
-                .filter(log -> isInPayPeriod(parseTimelogDate(log.getDate()), cutoff))
-                .toList();
+                    .filter(log -> log.getEmployeeNumber().equals(emp.getEmployeeNumber()))
+                    .filter(log -> isInPayPeriod(parseTimelogDate(log.getDate()), cutoff))
+                    .toList();
 
             if (!empLogs.isEmpty()) {
                 total += PayrollService.calculateNetPay(emp, empLogs, monthYear, payPeriod);
@@ -190,37 +190,34 @@ public class PayrollVer2 extends javax.swing.JPanel {
         return total;
     }
 
-   private void openDisplayPayrollList(String payPeriod, String payDate) {
-    DisplayPayruns displayPanel = new DisplayPayruns();
+    private void openDisplayPayrollList(String payPeriod, String payDate) {
+        DisplayPayruns displayPanel = new DisplayPayruns();
 
-    displayPanel.setPayPeriod(payPeriod);
-    displayPanel.setPayDay(payDate);
-    displayPanel.setPayrollType("Semi-Monthly");
+        displayPanel.setPayPeriod(payPeriod);
+        displayPanel.setPayDay(payDate);
+        displayPanel.setPayrollType("Semi-Monthly");
 
-    DateTimeFormatter displayFmt = DateTimeFormatter.ofPattern("MMMM d, yyyy", Locale.US);
-    DateTimeFormatter rawFmt = DateTimeFormatter.ofPattern("MM/dd/uuuu", Locale.US);
+        DateTimeFormatter displayFmt = DateTimeFormatter.ofPattern("MMMM d, yyyy", Locale.US);
+        DateTimeFormatter rawFmt = DateTimeFormatter.ofPattern("MM/dd/uuuu", Locale.US);
 
-    LocalDate cutoffDate = LocalDate.parse(payDate, displayFmt);
+        LocalDate cutoffDate = LocalDate.parse(payDate, displayFmt);
 
-    int employeeCount = countEmployeesPaidOn(cutoffDate);
-    displayPanel.setTotalEmployees(employeeCount);
+        int employeeCount = countEmployeesPaidOn(cutoffDate);
+        displayPanel.setTotalEmployees(employeeCount);
 
-    String cutoffRaw = cutoffDate.format(rawFmt);
-    displayPanel.setTableData(cutoffRaw);
+        String cutoffRaw = cutoffDate.format(rawFmt);
+        displayPanel.setTableData(cutoffRaw);
 
-    Dashboard.showPanel(displayPanel);
-}
-
-
-
-    
-
+        Dashboard.showPanel(displayPanel);
+    }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0),
+                new java.awt.Dimension(0, 32767));
         searchButton = new javax.swing.JButton();
         searchBar = new javax.swing.JTextField();
         boarder1 = new javax.swing.JSeparator();
@@ -292,29 +289,29 @@ public class PayrollVer2 extends javax.swing.JPanel {
 
         payrolList.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         payrolList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
-            },
-            new String [] {
-                "Pay Period", "Pay Date", "Employee", "Total Payment", "Status", "Actions"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
+                new Object[][] {
+                        { null, null, null, null, null, null },
+                        { null, null, null, null, null, null },
+                        { null, null, null, null, null, null },
+                        { null, null, null, null, null, null }
+                },
+                new String[] {
+                        "Pay Period", "Pay Date", "Employee", "Total Payment", "Status", "Actions"
+                }) {
+            Class[] types = new Class[] {
+                    java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                    java.lang.String.class, java.lang.Object.class
             };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+            boolean[] canEdit = new boolean[] {
+                    false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
+                return types[columnIndex];
             }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         payrolList.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -324,47 +321,56 @@ public class PayrollVer2 extends javax.swing.JPanel {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(boarder1, javax.swing.GroupLayout.Alignment.TRAILING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1003, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSubTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(searchBar, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnPrev)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblPageInfo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnNext)
-                .addGap(23, 23, 23))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(boarder1, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1003,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lblSubTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 265,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(searchBar, javax.swing.GroupLayout.PREFERRED_SIZE, 145,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnPrev)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblPageInfo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnNext)
+                                .addGap(23, 23, 23)));
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(45, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(searchBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addComponent(boarder1, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(lblSubTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(42, 42, 42)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblPageInfo)
-                    .addComponent(btnNext)
-                    .addComponent(btnPrev))
-                .addContainerGap(165, Short.MAX_VALUE))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap(45, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(searchBar, javax.swing.GroupLayout.Alignment.TRAILING,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE, 28,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(searchButton, javax.swing.GroupLayout.Alignment.TRAILING,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE, 28,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(12, 12, 12)
+                                .addComponent(boarder1, javax.swing.GroupLayout.PREFERRED_SIZE, 8,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(lblSubTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 44,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 329,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(42, 42, 42)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(lblPageInfo)
+                                        .addComponent(btnNext)
+                                        .addComponent(btnPrev))
+                                .addContainerGap(165, Short.MAX_VALUE)));
 
         // Manually added the FocusListener below the searchBar setup
         searchBar.addFocusListener(new java.awt.event.FocusListener() {
@@ -387,37 +393,35 @@ public class PayrollVer2 extends javax.swing.JPanel {
 
         getAccessibleContext().setAccessibleName("");
     }// </editor-fold>//GEN-END:initComponents
-        
-    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
 
-    }//GEN-LAST:event_searchButtonActionPerformed
+    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_searchButtonActionPerformed
 
-    private void searchBarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBarActionPerformed
+    }// GEN-LAST:event_searchButtonActionPerformed
+
+    private void searchBarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_searchBarActionPerformed
         // TODO add your handling code here:
-        
-    }//GEN-LAST:event_searchBarActionPerformed
 
-    private void searchBarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchBarKeyPressed
-      
-    }//GEN-LAST:event_searchBarKeyPressed
+    }// GEN-LAST:event_searchBarActionPerformed
 
-    private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevActionPerformed
+    private void searchBarKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_searchBarKeyPressed
+
+    }// GEN-LAST:event_searchBarKeyPressed
+
+    private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnPrevActionPerformed
         if (currentPage > 1) {
-        currentPage--;
-        loadPayRuns();
+            currentPage--;
+            loadPayRuns();
         }
-    }//GEN-LAST:event_btnPrevActionPerformed
+    }// GEN-LAST:event_btnPrevActionPerformed
 
-    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnNextActionPerformed
         int totalPages = (int) Math.ceil((double) payDates.size() / rowsPerPage);
         if (currentPage < totalPages) {
-        currentPage++;
-        loadPayRuns();
+            currentPage++;
+            loadPayRuns();
         }
-    }//GEN-LAST:event_btnNextActionPerformed
+    }// GEN-LAST:event_btnNextActionPerformed
 
-    
-   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSeparator boarder1;
     private javax.swing.JButton btnNext;

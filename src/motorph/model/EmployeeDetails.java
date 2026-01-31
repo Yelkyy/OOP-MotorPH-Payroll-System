@@ -26,9 +26,9 @@ public class EmployeeDetails {
     private double hourlyRate;
 
     public EmployeeDetails(String employeeNumber, String lastName, String firstName, String birthday, String address,
-                           String phoneNumber, String sssNumber, String philhealthNumber, String tinNumber, String pagIbigNumber,
-                           String status, String position, String immediateSupervisor, double basicSalary, double riceSubsidy,
-                           double phoneAllowance, double clothingAllowance, double grossSemiMonthlyRate, double hourlyRate) {
+            String phoneNumber, String sssNumber, String philhealthNumber, String tinNumber, String pagIbigNumber,
+            String status, String position, String immediateSupervisor, double basicSalary, double riceSubsidy,
+            double phoneAllowance, double clothingAllowance, double grossSemiMonthlyRate, double hourlyRate) {
         this.employeeNumber = employeeNumber;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -51,28 +51,80 @@ public class EmployeeDetails {
     }
 
     // Getters
-    public String getEmployeeNumber() { return employeeNumber; }
-    public String getLastName() { return lastName; }
-    public String getFirstName() { return firstName; }
-    public String getBirthday() { return birthday; }
-    public String getAddress() { return address; }
-    public String getPhoneNumber() { return phoneNumber; }
-    public String getSssNumber() { return sssNumber; }
-    public String getPhilhealthNumber() { return philhealthNumber; }
-    public String getTinNumber() { return tinNumber; }
-    public String getPagIbigNumber() { return pagIbigNumber; }
-    public String getStatus() { return status; }
-    public String getPosition() { return position; }
-    public String getImmediateSupervisor() { return immediateSupervisor; }
-    public double getBasicSalary() { return basicSalary; }
-    public double getRiceSubsidy() { return riceSubsidy; }
-    public double getPhoneAllowance() { return phoneAllowance; }
-    public double getClothingAllowance() { return clothingAllowance; }
-    public double getGrossSemiMonthlyRate() { return grossSemiMonthlyRate; }
-    public double getHourlyRate() { return hourlyRate; }
-
-    public String getEmployeeId() {
+    public String getEmployeeNumber() {
         return employeeNumber;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getSssNumber() {
+        return sssNumber;
+    }
+
+    public String getPhilhealthNumber() {
+        return philhealthNumber;
+    }
+
+    public String getTinNumber() {
+        return tinNumber;
+    }
+
+    public String getPagIbigNumber() {
+        return pagIbigNumber;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public String getImmediateSupervisor() {
+        return immediateSupervisor;
+    }
+
+    public double getBasicSalary() {
+        return basicSalary;
+    }
+
+    public double getRiceSubsidy() {
+        return riceSubsidy;
+    }
+
+    public double getPhoneAllowance() {
+        return phoneAllowance;
+    }
+
+    public double getClothingAllowance() {
+        return clothingAllowance;
+    }
+
+    public double getGrossSemiMonthlyRate() {
+        return grossSemiMonthlyRate;
+    }
+
+    public double getHourlyRate() {
+        return hourlyRate;
     }
 
     public String getFullName() {
@@ -159,32 +211,32 @@ public class EmployeeDetails {
     public String[] toCSVArray() {
         DecimalFormat noSci = new DecimalFormat("0");
 
-        return new String[]{
-            employeeNumber,
-            lastName,
-            firstName,
-            birthday,
-            address,
-            phoneNumber,
-            sssNumber,
-            noSci.format(Double.parseDouble(philhealthNumber)),
-            tinNumber,
-            noSci.format(Double.parseDouble(pagIbigNumber)),
-            status,
-            position,
-            immediateSupervisor,
-            String.format(Locale.US, "%.2f", basicSalary),
-            String.format(Locale.US, "%.2f", riceSubsidy),
-            String.format(Locale.US, "%.2f", phoneAllowance),
-            String.format(Locale.US, "%.2f", clothingAllowance),
-            String.format(Locale.US, "%.2f", grossSemiMonthlyRate),
-            String.format(Locale.US, "%.2f", hourlyRate)
+        return new String[] {
+                employeeNumber,
+                lastName,
+                firstName,
+                birthday,
+                address,
+                phoneNumber,
+                sssNumber,
+                noSci.format(Double.parseDouble(philhealthNumber)),
+                tinNumber,
+                noSci.format(Double.parseDouble(pagIbigNumber)),
+                status,
+                position,
+                immediateSupervisor,
+                String.format(Locale.US, "%.2f", basicSalary),
+                String.format(Locale.US, "%.2f", riceSubsidy),
+                String.format(Locale.US, "%.2f", phoneAllowance),
+                String.format(Locale.US, "%.2f", clothingAllowance),
+                String.format(Locale.US, "%.2f", grossSemiMonthlyRate),
+                String.format(Locale.US, "%.2f", hourlyRate)
         };
     }
 
     @Override
     public String toString() {
         return "Employee #" + employeeNumber + " | Name: " + firstName + " " + lastName +
-               " | Position: " + position + " | Salary: " + basicSalary;
+                " | Position: " + position + " | Salary: " + basicSalary;
     }
 }

@@ -1,4 +1,4 @@
-package motorph.utils;
+package motorph.service;
 
 import motorph.model.Role;
 import motorph.model.User;
@@ -9,14 +9,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class UserAuthentication {
+public class UserAuthenticationService {
 
     public static User authenticate(String email, String password) {
         Path filePath = Paths.get("resources", "MotorPH Users.csv");
 
         try (BufferedReader reader = Files.newBufferedReader(filePath)) {
             String line;
-            reader.readLine(); 
+            reader.readLine();
 
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
@@ -28,8 +28,8 @@ public class UserAuthentication {
                 String csvUsername = parts[0].trim();
                 String csvPassword = parts[1].replaceAll("[\\r\\n]+", "").trim();
                 String firstName = parts[2].trim();
-                String lastName  = parts[3].trim();
-                String usrRole   = parts[4].trim();
+                String lastName = parts[3].trim();
+                String usrRole = parts[4].trim();
                 String employeeId = parts[5].trim();
 
                 if (csvUsername.equalsIgnoreCase(email.trim())

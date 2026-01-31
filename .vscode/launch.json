@@ -6,6 +6,13 @@
       "name": "App",
       "request": "launch",
       "mainClass": "motorph.app.App",
+      "projectName": "OOP-MotorPH-Payroll-System_33716c5d"
+    },
+    {
+      "type": "java",
+      "name": "App",
+      "request": "launch",
+      "mainClass": "motorph.app.App",
       "projectName": "GRP9-MotorPH-Employee-Application_399150e1"
     },
     {
