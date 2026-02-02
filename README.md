@@ -1,61 +1,82 @@
-# MotorPH Payroll Management System
+# MotorPH Payroll Management System (OOP Version)
 
-**MotorPH Payroll Management System** is a Java desktop app that helps MotorPH manage employee records, calculate payroll, and provide employees with access to their payslips.
+**MotorPH Payroll Management System** is a Java desktop application developed using **Object-Oriented Programming (OOP)** principles.  
+It is designed to manage employee records, payroll processing, and role-based access for MotorPH.
 
----
-
-## 🧾 Overview
-
-This system supports HR and Payroll operations with features like employee management, automated pay periods, and secure login access.
-
-It includes features based on the following change requests:
-- **MPHCR01** – Manage employee data  
-- **MPHCR02** – Auto-generate pay periods  
-- **MPHCR03** – View payslips and payroll breakdown  
-- **MPHCR04** – CSV-based secure login system
+The system uses **CSV files as its data source** and provides different features depending on the logged-in user’s role.
 
 ---
 
-## 👥 Features by Role
+## 🧾 System Overview
 
-### 👨‍💼 Admin Features
-- ✅ Add, edit, and delete employee records   
-- 📅 View and manage payroll periods  
-- 📄 View payslips for all employees  
-- 🧹 Automatically update supervisor list when employees are added or removed  
-- 📁 All data saved in CSV files (employees, users, time logs, leave requests)
+This application supports core HR and Payroll operations such as:
+- Employee record management  
+- Payroll and payslip viewing  
+- Attendance tracking  
+- Leave request processing  
+- Role-based access control  
 
-### 👩‍💻 Employee Features
-- 🔑 Log in securely using username and password  
-- 🧾 View personal payslip details (net pay, deductions, etc.)
-- 🕒 **Time In / Time Out logging** with automatic date and time recording  
-- 🕒 View personal attendance records with Time   
-- 📝 Submit leave requests  
-- 👤 View and edit some personal profile information  
+The system demonstrates key OOP concepts including:
+- **Encapsulation**
+- **Inheritance**
+- **Polymorphism**
+- **Abstraction**
 
 ---
 
-## 💻 How to Download and Run
+## 👥 User Roles & Features
 
-1. Click the **Code** button on this repository, then select **Download ZIP** or use Git to clone.
-2. Open the project in **NetBeans** or any Java IDE.
-3. Press `F6` to build and run the app.
-
----
-
-## 🔐 Default Login Credentials
-
-| Role      | Username       | Password |
-|-----------|----------------|----------|
-| Admin     | `admin1`       | `12345`  |
-| Employee  | `vella.santos` | `10023`  |
+### 👨‍💼 Admin (System Administrator)
+- View all employee records  
+- View attendance records of all employees  
+- View payroll and payslips of all employees  
+- Configure system access and settings  
 
 ---
 
-## 📁 File Locations
-- **Employee Data:** `resources/Copy of MotorPH Employee Data.csv`
-- **Time Logs:** `resources/Copy of MotorPH Employee Data Time Logs.csv`
-- **User Accounts:** `resources/MotorPH Users.csv`
-- **Leave Requests:** `resources/MotorPH_LeaveRequest.csv`
+### 👩‍💼 HR
+- Add, update, and delete employee records  
+- View attendance records of all employees  
+- Approve or reject leave requests  
 
 ---
+
+### 💼 Finance
+- Generate payroll and pay runs  
+- View and print payslips of all employees  
+
+---
+
+### 👤 Employee
+- View personal profile information  
+- View personal attendance records  
+- Submit leave requests  
+- View and print personal payslip  
+
+*(Employees do not have access to the system dashboard used by Admin, HR, or Finance.)*
+
+---
+
+## 🔐 Login & Access Control
+
+The system uses **role-based authentication**.
+
+### Automatic Employee Login
+Regular employees do not require a separate user account file.
+
+**Employee login format:**
+Username: emp{EmployeeNumber}
+Password: {EmployeeNumber}
+
+## Default System Login Accounts
+
+The following accounts are predefined in `MotorPH Users.csv` for system access:
+
+| Role     | Username      | Password |
+|--------  |-----------    |----------|
+| Admin    | admin1        | admin123 |
+| HR       | andrea.hr     | hr123    |
+| Finance  | rod.finance   | fin123   |
+
+These users log in using their assigned **username and password**.
+

@@ -214,17 +214,11 @@ public class LoginScreen extends javax.swing.JFrame {
             return;
         }
 
-        if (user.getRole() != Role.ADMIN) {
-            JOptionPane.showMessageDialog(this,
-                    "Access restricted. Admin login only.",
-                    "Access Denied",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
 
-        motorph.ui.Dashboard dashboardFrame = new motorph.ui.Dashboard();
-        dashboardFrame.personalize(user.getFullName());
+        motorph.ui.Dashboard dashboardFrame = new motorph.ui.Dashboard(user);
         dashboardFrame.setVisible(true);
+        this.dispose();
+
 
         this.dispose();
 
