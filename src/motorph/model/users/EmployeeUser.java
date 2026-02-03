@@ -2,18 +2,19 @@ package motorph.model.users;
 
 import java.util.List;
 
+import motorph.model.EmployeeDetails;
 import motorph.model.Role;
-import motorph.model.User;
+import motorph.model.core.Employee;
 
-public class EmployeeUser extends User {
-    public EmployeeUser(String username, String firstName, String lastName, String employeeId) {
-        super(username, firstName, lastName, Role.EMPLOYEE, employeeId);
+public class EmployeeUser extends Employee {
+    public EmployeeUser(EmployeeDetails details) {
+        super(details, Role.EMPLOYEE);
     }
 
     @Override
     public List<String> getMenuItems() {
         return List.of(
-                "View/Edit Personal",
+                "My Profle",
                 "Change Password",
                 "Record Attendance",
                 "Submit Leave Request",

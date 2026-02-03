@@ -2,12 +2,13 @@ package motorph.model.users;
 
 import java.util.List;
 
-import motorph.model.User;
+import motorph.model.EmployeeDetails;
 import motorph.model.Role;
+import motorph.model.core.Employee;
 
-public class AdminUser extends User {
-    public AdminUser(String username, String firstName, String lastName, String employeeId) {
-        super(username, firstName, lastName, Role.ADMIN, employeeId);
+public class AdminUser extends Employee {
+    public AdminUser(EmployeeDetails details) {
+        super(details, Role.ADMIN);
     }
 
     @Override

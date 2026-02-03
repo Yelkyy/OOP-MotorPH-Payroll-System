@@ -5,5 +5,4 @@ public enum Role {
     HR,
     EMPLOYEE,
     FINANCE,
-    IT
 }

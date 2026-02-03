@@ -1,15 +1,13 @@
 package motorph.model;
 
-import java.util.Collections;
-import java.util.List;
-
 public class User {
 
     private String username;
-    private String firstName;
-    private String lastName;
     private Role role;
     private String employeeNumber;
+
+    private String firstName;
+    private String lastName;
 
     public User(String username, String firstName, String lastName, Role role, String employeeNumber) {
         this.username = username;
@@ -19,9 +17,16 @@ public class User {
         this.employeeNumber = employeeNumber;
     }
 
-    // ===== Basic Getters =====
     public String getUsername() {
         return username;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public String getEmployeeNumber() {
+        return employeeNumber;
     }
 
     public String getFirstName() {
@@ -34,19 +39,5 @@ public class User {
 
     public String getFullName() {
         return firstName + " " + lastName;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public String getemployeeNumber() {
-        return employeeNumber;
-    }
-
-    // ===== Menu / Role Behavior =====
-    // Overridden by AdminUser, HrUser, FinanceUser, EmployeeUser
-    public List<String> getMenuItems() {
-        return Collections.emptyList();
     }
 }

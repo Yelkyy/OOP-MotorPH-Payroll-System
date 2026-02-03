@@ -1,5 +1,10 @@
 package motorph.service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,16 +43,16 @@ public class EmployeeService implements EmployeeCrudOperations {
                 .collect(Collectors.toList());
     }
 
-    // Generate a new employee id (optional)
+    // Generate a new employee id
     public static String generateNewEmployeeId() {
         return DataHandler.generateNewEmpId();
     }
 
-    // =========================
+    // ==========================================
     // Interface implementation (instance methods)
     // These satisfy EmployeeCrudOperations contract.
     // They delegate to DataHandler.
-    // =========================
+    // ===========================================
 
     @Override
     public void addEmployee(EmployeeDetails employee) {
@@ -61,7 +66,14 @@ public class EmployeeService implements EmployeeCrudOperations {
 
     @Override
     public void deleteEmployee(String employeeNumber) {
+
+        if (isAdminEmployee(employeeNumber)) {
+            throw new IllegalStateException(
+                    "Admin employee cannot be deleted. System must always have an administrator.");
+        }
+
         DataHandler.removeEmployeeFromCSV(employeeNumber);
+        DataHandler.deleteTimeLogsByEmployeeNumber(employeeNumber);
     }
 
     @Override
@@ -73,4 +85,33 @@ public class EmployeeService implements EmployeeCrudOperations {
     public List<EmployeeDetails> findAllEmployees() {
         return getAllEmployees();
     }
+
+    private boolean isAdminEmployee(String employeeNumber) {
+        Path filePath = Paths.get("resources", "MotorPH Users.csv");
+
+        try (BufferedReader reader = Files.newBufferedReader(filePath)) {
+            String line;
+            reader.readLine();
+
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+
+                if (parts.length < 6)
+                    continue;
+
+                String role = parts[4].trim();
+                String empNo = parts[5].trim();
+
+                if (empNo.equals(employeeNumber)
+                        && role.equalsIgnoreCase("ADMIN")) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading Users.csv: " + e.getMessage());
+        }
+
+        return false;
+    }
+
 }

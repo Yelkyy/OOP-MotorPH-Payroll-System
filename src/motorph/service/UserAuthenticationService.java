@@ -38,16 +38,24 @@ public class UserAuthenticationService {
                 if (csvUsername.equalsIgnoreCase(email.trim())
                         && csvPassword.equals(password.trim())) {
 
+                    // employee record must exist
+                    if (!employeeExists(employeeId)) {
+                        System.out.println(
+                                "Login blocked: Employee record not found for employee #" + employeeId);
+                        return null;
+                    }
+
                     Role role;
                     try {
                         role = Role.valueOf(usrRole.toUpperCase());
                     } catch (IllegalArgumentException badRole) {
-                        System.out.println("Invalid role value in CSV for user " + csvUsername + ": " + usrRole);
+                        System.out.println("Invalid role value in CSV for user " + csvUsername);
                         return null;
                     }
 
                     return new User(csvUsername, firstName, lastName, role, employeeId);
                 }
+
             }
 
         } catch (IOException e) {

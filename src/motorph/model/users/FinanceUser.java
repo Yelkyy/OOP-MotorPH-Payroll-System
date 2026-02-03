@@ -2,17 +2,19 @@ package motorph.model.users;
 
 import java.util.List;
 
+import motorph.model.EmployeeDetails;
 import motorph.model.Role;
-import motorph.model.User;
+import motorph.model.core.Employee;
 
-public class FinanceUser extends User {
-    public FinanceUser(String username, String firstName, String lastName, String employeeId) {
-        super(username, firstName, lastName, Role.FINANCE, employeeId);
+public class FinanceUser extends Employee {
+    public FinanceUser(EmployeeDetails details) {
+        super(details, Role.FINANCE);
     }
 
     @Override
     public List<String> getMenuItems() {
         return List.of(
+                "My Profile",
                 "Generate Employee Payroll",
                 "Generate Payslip",
                 "View Payroll Reports",
