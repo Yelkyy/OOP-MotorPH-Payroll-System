@@ -8,13 +8,21 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class UserAuthenticationService {
+import motorph.model.EmployeeDetails;
+import motorph.model.core.Employee;
+import motorph.model.users.AdminUser;
+import motorph.model.users.EmployeeUser;
+import motorph.model.users.FinanceUser;
+import motorph.model.users.HrUser;
+import static motorph.service.EmployeeService.getEmployeeById;
 
-    public static User authenticate(String email, String password) {
+public class UserAuthenticationService {
+    
+
+    public static User authenticate(String username, String password) {
         Path filePath = Paths.get("resources", "MotorPH Users.csv");
 
         try (BufferedReader reader = Files.newBufferedReader(filePath)) {
@@ -35,25 +43,24 @@ public class UserAuthenticationService {
                 String usrRole = parts[4].trim();
                 String employeeId = parts[5].trim();
 
-                if (csvUsername.equalsIgnoreCase(email.trim())
+                if (csvUsername.equalsIgnoreCase(username.trim())
                         && csvPassword.equals(password.trim())) {
 
-                    // employee record must exist
-                    if (!employeeExists(employeeId)) {
-                        System.out.println(
-                                "Login blocked: Employee record not found for employee #" + employeeId);
-                        return null;
-                    }
+                Role role;
+                try {
+                    role = Role.valueOf(usrRole.toUpperCase());
+                } catch (IllegalArgumentException badRole) {
+                    System.out.println("Invalid role value in CSV for user " + csvUsername);
+                    return null;
+                }
 
-                    Role role;
-                    try {
-                        role = Role.valueOf(usrRole.toUpperCase());
-                    } catch (IllegalArgumentException badRole) {
-                        System.out.println("Invalid role value in CSV for user " + csvUsername);
-                        return null;
-                    }
+                // employee record must exist (for ALL accounts)
+                if (!employeeExists(employeeId)) {
+                    System.out.println("Login blocked: Employee record not found for employee #" + employeeId);
+                    return null;
+                }
 
-                    return new User(csvUsername, firstName, lastName, role, employeeId);
+                return new User(csvUsername, firstName, lastName, role, employeeId);
                 }
 
             }
@@ -67,14 +74,14 @@ public class UserAuthenticationService {
          * password: employee number
          **/
         Pattern p = Pattern.compile("^emp(\\d+)$", Pattern.CASE_INSENSITIVE);
-        Matcher m = p.matcher(email.trim());
+        Matcher m = p.matcher(username.trim());
 
         if (m.matches()) {
             String empNo = m.group(1);
 
             if (password.trim().equals(empNo) && employeeExists(empNo)) {
                 String[] name = getEmployeeName(empNo);
-                return new User(email.trim(), name[0], name[1], Role.EMPLOYEE, empNo);
+                return new User(username.trim(), name[0], name[1], Role.EMPLOYEE, empNo);
             }
         }
 
@@ -131,5 +138,23 @@ public class UserAuthenticationService {
 
         return new String[] { "Employee", employeeNumber };
     }
+    
+    public Employee getLoggedInEmp(User user) {
+        EmployeeDetails details = getEmployeeById(user.getEmployeeNumber());
+
+        if (details == null) {
+            throw new IllegalStateException(
+                "Employee not found: " + user.getEmployeeNumber()
+            );
+        }
+
+        return switch (user.getRole()) {
+            case ADMIN   -> new AdminUser(details);
+            case HR      -> new HrUser(details);
+            case FINANCE -> new FinanceUser(details);
+            case EMPLOYEE -> new EmployeeUser(details);
+        };
+    }
+
 
 }

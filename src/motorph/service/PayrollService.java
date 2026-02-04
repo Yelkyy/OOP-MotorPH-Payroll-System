@@ -9,6 +9,12 @@ import motorph.model.EmployeeDetails;
 import motorph.model.EmployeeTimeLogs;
 import motorph.model.payroll.DeductionBreakdown;
 
+/**
+ * Service class providing payroll calculation operations for the MotorPH
+ * system.
+ * Delegates to PayrollCalculator implementations and handles input validation
+ * for payroll processing.
+ */
 public class PayrollService {
 
     private static final DateTimeFormatter MONTH_YEAR_FMT = DateTimeFormatter.ofPattern("MM-yyyy");

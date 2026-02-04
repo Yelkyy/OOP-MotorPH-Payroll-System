@@ -3,6 +3,12 @@ package motorph.model;
 import java.text.DecimalFormat;
 import java.util.Locale;
 
+/**
+ * Data model class containing comprehensive employee information.
+ * Stores personal details, government IDs, employment information, and salary
+ * components
+ * for employees in the MotorPH payroll system.
+ */
 public class EmployeeDetails {
 
     private String employeeNumber;

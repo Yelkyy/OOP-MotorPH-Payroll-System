@@ -208,7 +208,7 @@ public class PayrunsPanel extends javax.swing.JPanel {
         String cutoffRaw = cutoffDate.format(rawFmt);
         displayPanel.setTableData(cutoffRaw);
 
-        Dashboard.showPanel(displayPanel);
+        MainFrame.showPanel(displayPanel);
     }
 
     @SuppressWarnings("unchecked")

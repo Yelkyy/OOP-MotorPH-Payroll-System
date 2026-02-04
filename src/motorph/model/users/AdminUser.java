@@ -6,6 +6,11 @@ import motorph.model.EmployeeDetails;
 import motorph.model.Role;
 import motorph.model.core.Employee;
 
+/**
+ * Represents an administrator user in the MotorPH payroll system.
+ * Child class of Employee that provides access to administrative features like
+ * user account management, role assignments, and system reports.
+ */
 public class AdminUser extends Employee {
     public AdminUser(EmployeeDetails details) {
         super(details, Role.ADMIN);

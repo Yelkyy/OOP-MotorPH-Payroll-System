@@ -6,6 +6,11 @@ import motorph.model.EmployeeDetails;
 import motorph.model.Role;
 import motorph.model.core.Employee;
 
+/**
+ * Represents a Human Resources department user in the MotorPH payroll system.
+ * Child class of Employee that provides access to HR features like
+ * employee management, attendance tracking, and leave request approval.
+ */
 public class HrUser extends Employee {
 
     public HrUser(EmployeeDetails details) {

@@ -5,6 +5,12 @@ import java.text.SimpleDateFormat;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Data model for employee leave requests containing request dates, leave type,
+ * and approval status.
+ * NOTE: Not yet fully implemented. Intended for employee role leave request
+ * submission and approval workflow.
+ */
 public class LeaveRequest {
     private Date requestDate;
     private Date from;

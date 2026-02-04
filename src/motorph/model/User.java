@@ -1,5 +1,9 @@
 package motorph.model;
 
+/**
+ * Represents a user account in the payroll system with credentials, profile
+ * info, and role assignment.
+ */
 public class User {
 
     private String username;

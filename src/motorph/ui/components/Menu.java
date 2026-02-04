@@ -3,9 +3,10 @@ package motorph.ui.components;
 import motorph.model.Role;
 import motorph.ui.Attendance;
 import motorph.ui.EmployeePanel;
-import motorph.ui.HomePanel;
+import motorph.ui.DashboardPanel;
 import motorph.ui.MenuHandler;
 import motorph.ui.PayrunsPanel;
+import motorph.ui.MyProfilePanel;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -14,6 +15,7 @@ import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Rectangle2D;
+import java.beans.Beans;
 
 import javax.swing.Box;
 import javax.swing.JComponent;
@@ -21,8 +23,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingUtilities;
+import motorph.model.core.Employee;
 
 import net.miginfocom.swing.MigLayout;
+
 
 public class Menu extends JComponent {
 
@@ -32,6 +36,7 @@ public class Menu extends JComponent {
     private MenuItem selectedItem;
     private String firstName = "User";
     private Role role = Role.EMPLOYEE;
+    private Employee loggedInEmployee;
 
     // Menu structure: {Main Menu}
     private final MenuHandler[] menuItems = new MenuHandler[] {
@@ -79,10 +84,15 @@ public class Menu extends JComponent {
 
             new MenuHandler("logout", "Log Out", MenuHandler.menuType.MENU)
     };
+    
+        public Menu() { 
+        if (!Beans.isDesignTime()) {
+            init();
+        } else {
+                setOpaque(true);
+                }
+        }
 
-    public Menu() {
-        init();
-    }
 
     public void setMainPanel(JPanel panel) {
         this.mainPanel = panel;
@@ -96,6 +106,11 @@ public class Menu extends JComponent {
         this.role = (role == null) ? Role.EMPLOYEE : role;
         rebuildMenu();
     }
+
+    public void setEmployee(Employee employee) {
+        this.loggedInEmployee = employee;
+    }
+
 
     public void selectMenuItemByName(String menuName) {
         for (Component comp : getComponents()) {
@@ -214,8 +229,11 @@ public class Menu extends JComponent {
             mainPanel.removeAll();
 
             switch (name) {
+                case "My Profile":
+                    mainPanel.add(new MyProfilePanel(loggedInEmployee));
+                    break;
                 case "Dashboard":
-                    mainPanel.add(new HomePanel(firstName));
+                    mainPanel.add(new DashboardPanel(firstName));
                     break;
                 case "Employee":
                     mainPanel.add(new EmployeePanel("Employee List"));

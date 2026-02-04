@@ -11,6 +11,12 @@ import java.text.DecimalFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+/**
+ * Repository class responsible for CSV file operations including reading and
+ * writing employee data.
+ * Handles employee details, time logs, and user authentication data from CSV
+ * files.
+ */
 public class DataHandler {
 
     private static final Path CSV_FILE = Paths.get("resources", "Copy of MotorPH Employee Data.csv");

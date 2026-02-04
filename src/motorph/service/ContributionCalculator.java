@@ -1,5 +1,11 @@
 package motorph.service;
 
+/**
+ * Utility class for calculating Philippine government-mandated contributions
+ * (SSS, PhilHealth, Pag-IBIG).
+ * Provides static methods to compute employee deductions based on salary and
+ * contribution rates.
+ */
 public class ContributionCalculator {
 
     private static final double SSS_MAX_SALARY = 24750;

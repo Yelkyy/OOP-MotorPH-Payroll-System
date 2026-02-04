@@ -11,8 +11,21 @@ import java.util.stream.Collectors;
 import motorph.contracts.EmployeeCrudOperations;
 import motorph.model.EmployeeDetails;
 import motorph.model.EmployeeTimeLogs;
+import motorph.model.User;
+import motorph.model.core.Employee;
+import motorph.model.users.AdminUser;
+import motorph.model.users.EmployeeUser;
+import motorph.model.users.FinanceUser;
+import motorph.model.users.HrUser;
 import motorph.repository.DataHandler;
 
+/**
+ * Service class for employee management operations.
+ * Provides CRUD operations for employee data, time log retrieval, and employee
+ * role creation.
+ * Implements EmployeeCrudOperations contract and delegates data operations to
+ * DataHandler.
+ */
 public class EmployeeService implements EmployeeCrudOperations {
 
     // UI safe for finding one employee using one employee id
@@ -114,4 +127,29 @@ public class EmployeeService implements EmployeeCrudOperations {
         return false;
     }
 
+    public Employee getLoggedInEmp(User user) {
+
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+
+        EmployeeDetails details = getEmployeeById(user.getEmployeeNumber());
+
+        if (details == null) {
+            throw new IllegalStateException(
+                    "Employee record not found for " + user.getEmployeeNumber());
+        }
+
+        switch (user.getRole()) {
+            case ADMIN:
+                return new AdminUser(details);
+            case HR:
+                return new HrUser(details);
+            case FINANCE:
+                return new FinanceUser(details);
+            case EMPLOYEE:
+                return new EmployeeUser(details);
+        }
+        return null;
+    }
 }

@@ -536,7 +536,7 @@ public class DisplayPayruns extends javax.swing.JPanel {
     }// GEN-LAST:event_searchButtonActionPerformed
 
     private void backIconMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_backIconMouseClicked
-        Dashboard.showPanel(new PayrunsPanel());
+        MainFrame.showPanel(new PayrunsPanel());
     }// GEN-LAST:event_backIconMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

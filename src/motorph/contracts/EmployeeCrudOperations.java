@@ -3,6 +3,7 @@ package motorph.contracts;
 import java.util.List;
 import motorph.model.EmployeeDetails;
 
+/** Contract interface defining CRUD operations for employee management. */
 public interface EmployeeCrudOperations {
     void addEmployee(EmployeeDetails employee);
 

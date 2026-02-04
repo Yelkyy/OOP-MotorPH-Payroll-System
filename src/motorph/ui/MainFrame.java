@@ -2,37 +2,48 @@ package motorph.ui;
 
 import motorph.model.User;
 import motorph.model.Role;
+import motorph.model.core.Employee;
+import motorph.service.EmployeeService;
 
 import javax.swing.JPanel;
 
-public class Dashboard extends javax.swing.JFrame {
+/**
+ * Main application window that serves as the primary container for the MotorPH
+ * Payroll System.
+ * Implements a single-page application architecture navigation menu
+ * and a dynamic content area where different panels are displayed based on user
+ * navigation.
+ * The frame manages user session state and provides role-based initial view
+ * configuration.
+ */
+public class MainFrame extends javax.swing.JFrame {
     private static JPanel mainBody;
     private User loggedInUser;
+    private Employee loggedInEmployee;
 
-    public Dashboard(User user) {
+    public MainFrame(User user, Employee employee) {
         initComponents();
         setLocationRelativeTo(null);
 
         this.loggedInUser = user;
+        this.loggedInEmployee = employee;
 
         mainBody = body;
         menu1.setMainPanel(body);
-        menu1.setRole(loggedInUser.getRole());
-        menu1.setFirstName(user.getFullName());
+        menu1.setRole(user.getRole());
+        menu1.setFirstName(user.getFirstName());
+        menu1.setEmployee(employee);
 
-        if (loggedInUser.getRole() == Role.EMPLOYEE) {
-            // later will put MyProfilePanel
-            showPanel(new JPanel());
-            menu1.selectMenuItemByName("My Profile"); // optional highlight
+        if (user.getRole() == Role.EMPLOYEE) {
+            showPanel(new MyProfilePanel(employee));
+            menu1.selectMenuItemByName("My Profile");
         } else {
-            // default: dashboard home
-            showPanel(new HomePanel(user.getFullName()));
+            showPanel(new DashboardPanel(user.getFullName()));
             menu1.selectMenuItemByName("Dashboard");
         }
-
     }
 
-    public Dashboard() {
+    public MainFrame() {
         initComponents();
         mainBody = body;
         menu1.setMainPanel(body);
@@ -41,18 +52,19 @@ public class Dashboard extends javax.swing.JFrame {
 
     public void personalize(String name) {
         menu1.setFirstName(name);
-        showPanel(new HomePanel(name));
+        showPanel(new DashboardPanel(name));
         menu1.selectMenuItemByName("Dashboard");
     }
 
     public static void showPanel(JPanel panel) {
         mainBody.removeAll();
-        mainBody.add(panel);
+        mainBody.add(panel, java.awt.BorderLayout.CENTER);
         mainBody.revalidate();
         mainBody.repaint();
     }
 
     @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -66,7 +78,6 @@ public class Dashboard extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
         setMinimumSize(new java.awt.Dimension(1254, 720));
-        setPreferredSize(new java.awt.Dimension(1270, 720));
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(0, 66, 102));

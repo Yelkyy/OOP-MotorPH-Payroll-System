@@ -153,11 +153,11 @@
                       <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="showPWBox" min="-2" pref="119" max="-2" attributes="0"/>
-                          <Component id="inputEmail" max="32767" attributes="0"/>
                           <Component id="inputPassword" alignment="0" pref="302" max="32767" attributes="0"/>
                           <Component id="userLbl" alignment="0" min="-2" pref="87" max="-2" attributes="0"/>
                           <Component id="passwordLbl" alignment="0" min="-2" pref="108" max="-2" attributes="0"/>
                           <Component id="loginButton" alignment="0" min="-2" pref="144" max="-2" attributes="0"/>
+                          <Component id="inputUsername" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -171,8 +171,8 @@
                       <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
                       <Component id="userLbl" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="inputEmail" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="inputUsername" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                       <Component id="passwordLbl" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="inputPassword" min="-2" pref="22" max="-2" attributes="0"/>
@@ -204,11 +204,6 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Username"/>
               </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="inputEmail">
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inputEmailActionPerformed"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="passwordLbl">
               <Properties>
@@ -248,6 +243,8 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="showPWBoxActionPerformed"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JTextField" name="inputUsername">
             </Component>
           </SubComponents>
         </Container>

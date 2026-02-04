@@ -6,6 +6,13 @@ import motorph.model.EmployeeDetails;
 import motorph.model.Role;
 import motorph.model.core.Employee;
 
+/**
+ * Represents a regular employee user in the MotorPH payroll system.
+ * Child class of Employee that provides access to employee-specific features
+ * like
+ * viewing profile, recording attendance, submitting leave requests, and viewing
+ * payslips.
+ */
 public class EmployeeUser extends Employee {
     public EmployeeUser(EmployeeDetails details) {
         super(details, Role.EMPLOYEE);
@@ -14,7 +21,7 @@ public class EmployeeUser extends Employee {
     @Override
     public List<String> getMenuItems() {
         return List.of(
-                "My Profle",
+                "My Profile",
                 "Change Password",
                 "Record Attendance",
                 "Submit Leave Request",

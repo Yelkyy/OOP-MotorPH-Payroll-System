@@ -6,6 +6,10 @@ import motorph.model.EmployeeDetails;
 import motorph.model.EmployeeTimeLogs;
 import motorph.model.payroll.DeductionBreakdown;
 
+/**
+ * Contract interface defining payroll calculation operations including
+ * deductions and net pay computation.
+ */
 public interface PayrollCalculator {
 
     DeductionBreakdown computeDeductions(

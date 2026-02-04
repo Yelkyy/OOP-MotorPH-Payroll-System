@@ -9,6 +9,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Data model class representing employee attendance time logs.
+ * Stores employee identification, date, login/logout times, and provides
+ * methods to calculate work hours and handle various date/time formats.
+ */
 public class EmployeeTimeLogs {
 
     private final String employeeNumber;
@@ -20,12 +25,12 @@ public class EmployeeTimeLogs {
 
     // Accepts multiple date formats from CSV
     private static final List<DateTimeFormatter> DATE_FORMATS = Arrays.asList(
-        DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.US),
-        DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US),
-        DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.US)
-    );
+            DateTimeFormatter.ofPattern("MM/dd/yyyy", Locale.US),
+            DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.US),
+            DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.US));
 
-    public EmployeeTimeLogs(String employeeNumber, String lastName, String firstName, String date, String logIn, String logOut) {
+    public EmployeeTimeLogs(String employeeNumber, String lastName, String firstName, String date, String logIn,
+            String logOut) {
         this.employeeNumber = clean(employeeNumber);
         this.lastName = clean(lastName);
         this.firstName = clean(firstName);
@@ -39,7 +44,8 @@ public class EmployeeTimeLogs {
     }
 
     private LocalDate parseDate(String dateStr) {
-        if (dateStr == null) return null;
+        if (dateStr == null)
+            return null;
         dateStr = dateStr.replace("\"", "").trim();
 
         for (DateTimeFormatter formatter : DATE_FORMATS) {
@@ -99,11 +105,10 @@ public class EmployeeTimeLogs {
             return 0.0;
         }
     }
-    
+
     public LocalDate getDateValue() {
         return date;
     }
-
 
     @Override
     public String toString() {
@@ -114,12 +119,12 @@ public class EmployeeTimeLogs {
 
     public String[] toCSVArray() {
         return new String[] {
-            clean(employeeNumber),
-            clean(lastName),
-            clean(firstName),
-            getDate(), // Use consistent MM/dd/yyyy format
-            clean(logIn),
-            clean(logOut)
+                clean(employeeNumber),
+                clean(lastName),
+                clean(firstName),
+                getDate(), // Use consistent MM/dd/yyyy format
+                clean(logIn),
+                clean(logOut)
         };
     }
 }

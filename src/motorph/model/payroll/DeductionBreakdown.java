@@ -1,5 +1,9 @@
 package motorph.model.payroll;
 
+/**
+ * Data model storing detailed breakdown of payroll deductions
+ * including government contributions, tax, and net pay calculation.
+ */
 public class DeductionBreakdown {
 
     public double lateUndertime;

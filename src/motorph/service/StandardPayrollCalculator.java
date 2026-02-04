@@ -16,6 +16,13 @@ import motorph.model.EmployeeDetails;
 import motorph.model.EmployeeTimeLogs;
 import motorph.model.payroll.DeductionBreakdown;
 
+/**
+ * Standard implementation of PayrollCalculator that computes employee payroll
+ * deductions.
+ * Handles salary calculations, government contributions (SSS, PhilHealth,
+ * Pag-IBIG), tax computation,
+ * and late/undertime deductions based on time logs and pay period.
+ */
 public class StandardPayrollCalculator implements PayrollCalculator {
 
     // Tax Constants

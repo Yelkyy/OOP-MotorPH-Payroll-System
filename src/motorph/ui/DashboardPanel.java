@@ -3,15 +3,14 @@ package motorph.ui;
 import motorph.ui.components.CustomFont;
 
 /**
- * HomePanel serves as the default landing panel in the MotorPH dashboard.
- * It displays the current pay period dynamically based on the system date
- * and includes a calendar widget.
+ * DashboardPanel serves as the main landing page for non-EmployeeUser roles in
+ * the MotorPH system.
+ * Displays key dashboard statistics including active employee count, current
+ * pay period, and today's leaves.
  */
-public class HomePanel extends javax.swing.JPanel {
-    /**
-     * Constructs the HomePanel and initializes its components.
-     */
-    public HomePanel(String firstName) {
+public class DashboardPanel extends javax.swing.JPanel {
+
+    public DashboardPanel(String firstName) {
         initComponents();
         applyCustomFont();
         updateTotalEmployees();
@@ -35,6 +34,7 @@ public class HomePanel extends javax.swing.JPanel {
     }
 
     @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
@@ -156,7 +156,7 @@ public class HomePanel extends javax.swing.JPanel {
                                         .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(todayLeaveNum)
                                         .addComponent(totalLeaveText))
-                                .addContainerGap(129, Short.MAX_VALUE)));
+                                .addContainerGap(127, Short.MAX_VALUE)));
         todayLeaveBoxLayout.setVerticalGroup(
                 todayLeaveBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(todayLeaveBoxLayout.createSequentialGroup()
