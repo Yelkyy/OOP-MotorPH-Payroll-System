@@ -1,13 +1,16 @@
 package motorph.model.core;
 
 import java.util.List;
+
 import motorph.model.EmployeeDetails;
 import motorph.model.Role;
 
 /**
  * Abstract parent class representing an employee in the MotorPH payroll system.
- * Encapsulates common employee data and provides access to employee details and role information.
- * Subclasses must implement specific employee types with their respective behaviors.
+ * Encapsulates common employee data and provides access to employee details and
+ * role information.
+ * Subclasses must implement specific employee types with their respective
+ * behaviors.
  */
 public abstract class Employee {
 
@@ -36,15 +39,15 @@ public abstract class Employee {
     public String getFullName() {
         return details.getFullName();
     }
-    
+
     public String getFirstName() {
         return details.getFirstName();
     }
-    
+
     public String getLastName() {
         return details.getLastName();
     }
-    
+
     public String getBirthday() {
         return details.getBirthday();
     }
@@ -60,7 +63,18 @@ public abstract class Employee {
     public String getStatus() {
         return details.getStatus();
     }
-    
+
+    public boolean isRegular() {
+        return details.getStatus() != null
+                && details.getStatus().equalsIgnoreCase("Regular");
+    }
+
+    public boolean isProbationary() {
+        return details.getStatus() != null
+                && (details.getStatus().equalsIgnoreCase("Probationary")
+                        || details.getStatus().equalsIgnoreCase("Probation"));
+    }
+
     public String getPosition() {
         return details.getPosition();
     }

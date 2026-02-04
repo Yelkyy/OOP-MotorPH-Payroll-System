@@ -2,7 +2,10 @@ package motorph.ui.components;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
+import java.awt.font.TextAttribute;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CustomFont {
 

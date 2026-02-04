@@ -1,19 +1,18 @@
 package motorph.ui.panels;
 
-
 public class UnderMaintenance extends javax.swing.JPanel {
-    
+
     public void setFeatureName(String featureName) {
         lblFeatureName.setText(featureName + " is under maintenance.\n Please check back later.");
     }
 
- 
     public UnderMaintenance() {
         initComponents();
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         lblFeatureName = new javax.swing.JLabel();
@@ -29,7 +28,6 @@ public class UnderMaintenance extends javax.swing.JPanel {
         lblFeatureName.setText("Under Maintenance");
         add(lblFeatureName, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel lblFeatureName;

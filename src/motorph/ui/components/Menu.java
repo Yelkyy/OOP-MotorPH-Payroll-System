@@ -6,7 +6,8 @@ import motorph.ui.EmployeePanel;
 import motorph.ui.DashboardPanel;
 import motorph.ui.MenuHandler;
 import motorph.ui.PayrunsPanel;
-import motorph.ui.MyProfilePanel;
+import motorph.ui.employeeRole.MyProfilePanel;
+import motorph.ui.employeeRole.LeaveRequestPanel;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -26,7 +27,6 @@ import javax.swing.SwingUtilities;
 import motorph.model.core.Employee;
 
 import net.miginfocom.swing.MigLayout;
-
 
 public class Menu extends JComponent {
 
@@ -84,15 +84,14 @@ public class Menu extends JComponent {
 
             new MenuHandler("logout", "Log Out", MenuHandler.menuType.MENU)
     };
-    
-        public Menu() { 
+
+    public Menu() {
         if (!Beans.isDesignTime()) {
             init();
         } else {
-                setOpaque(true);
-                }
+            setOpaque(true);
         }
-
+    }
 
     public void setMainPanel(JPanel panel) {
         this.mainPanel = panel;
@@ -110,7 +109,6 @@ public class Menu extends JComponent {
     public void setEmployee(Employee employee) {
         this.loggedInEmployee = employee;
     }
-
 
     public void selectMenuItemByName(String menuName) {
         for (Component comp : getComponents()) {
@@ -226,28 +224,35 @@ public class Menu extends JComponent {
         }
 
         if (mainPanel != null) {
-            mainPanel.removeAll();
+            JPanel newPanel = null;
 
             switch (name) {
                 case "My Profile":
-                    mainPanel.add(new MyProfilePanel(loggedInEmployee));
+                    newPanel = new MyProfilePanel(loggedInEmployee);
+                    break;
+                case "Leave":
+                    newPanel = new LeaveRequestPanel(loggedInEmployee);
                     break;
                 case "Dashboard":
-                    mainPanel.add(new DashboardPanel(firstName));
+                    newPanel = new DashboardPanel(firstName);
                     break;
                 case "Employee":
-                    mainPanel.add(new EmployeePanel("Employee List"));
+                    newPanel = new EmployeePanel("Employee List");
                     break;
                 case "Attendance":
-                    mainPanel.add(new Attendance());
+                    newPanel = new Attendance();
                     break;
                 case "Payroll":
-                    mainPanel.add(new PayrunsPanel());
+                    newPanel = new PayrunsPanel();
                     break;
             }
 
-            mainPanel.revalidate();
-            mainPanel.repaint();
+            if (newPanel != null) {
+                mainPanel.removeAll();
+                mainPanel.add(newPanel, java.awt.BorderLayout.CENTER);
+                mainPanel.revalidate();
+                mainPanel.repaint();
+            }
         }
 
         if (selectedItem != null) {

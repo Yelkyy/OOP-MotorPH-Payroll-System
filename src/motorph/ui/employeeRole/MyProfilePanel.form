@@ -31,7 +31,7 @@
               <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="empFullName" min="-2" pref="268" max="-2" attributes="0"/>
+                      <Component id="empFullName" pref="1014" max="32767" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
@@ -94,9 +94,9 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
-              <Component id="empFullName" min="-2" pref="36" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="56" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="65" max="-2" attributes="0"/>
+              <Component id="empFullName" pref="36" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="empNum" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="empNumVal" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -124,9 +124,9 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="address" min="-2" max="-2" attributes="0"/>
-                  <Component id="addressVal" min="-2" max="-2" attributes="0"/>
+                  <Component id="addressVal" min="-2" pref="42" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="empStatus" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="empStatusVal" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -164,8 +164,8 @@
     </Component>
     <Component class="javax.swing.JLabel" name="empFullName">
       <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Segoe UI" size="24" style="0"/>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="CustomFont.getExtendedSemiBold(20f)" type="code"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Full Name"/>
       </Properties>
@@ -285,7 +285,7 @@
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Edit Profile"/>
+        <Property name="text" type="java.lang.String" value="Edit My Profile"/>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="null"/>
         </Property>

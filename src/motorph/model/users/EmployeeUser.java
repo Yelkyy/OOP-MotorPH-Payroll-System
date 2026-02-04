@@ -22,9 +22,8 @@ public class EmployeeUser extends Employee {
     public List<String> getMenuItems() {
         return List.of(
                 "My Profile",
-                "Change Password",
-                "Record Attendance",
-                "Submit Leave Request",
+                "Attendance", //time-in, time-out, attendance list
+                "Leave", // leave request fill up and table
                 "View Payslip",
                 "Print Payslip");
     }

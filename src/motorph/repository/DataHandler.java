@@ -4,6 +4,7 @@ import com.opencsv.*;
 import com.opencsv.exceptions.CsvException;
 import motorph.model.EmployeeDetails;
 import motorph.model.EmployeeTimeLogs;
+import motorph.model.LeaveRequest;
 
 import java.io.*;
 import java.nio.file.*;
@@ -22,6 +23,7 @@ public class DataHandler {
     private static final Path CSV_FILE = Paths.get("resources", "Copy of MotorPH Employee Data.csv");
     private static final Path TIME_LOG_CSV = Paths.get("resources", "Copy of MotorPH Employee Data Time Logs.csv");
     private static final Path LOGIN_CSV = Paths.get("resources", "MotorPH Users.csv");
+    private static final Path LEAVE_CSV = Paths.get("resources", "MotorPH_LeaveRequest.csv");
 
     private static final String[] EMPLOYEE_CSV_HEADER = {
             "Employee #", "Last Name", "First Name", "Birthday", "Address", "Phone Number",
@@ -374,4 +376,100 @@ public class DataHandler {
         return "User";
     }
 
+    public static List<LeaveRequest> readLeaveRequests() {
+        List<LeaveRequest> requests = new ArrayList<>();
+
+        try (Reader reader = Files.newBufferedReader(LEAVE_CSV);
+                CSVReader csvReader = new CSVReaderBuilder(reader)
+                        .withCSVParser(new CSVParserBuilder()
+                                .withSeparator(',')
+                                .withIgnoreQuotations(false)
+                                .build())
+                        .build()) {
+
+            List<String[]> records = csvReader.readAll();
+
+            for (int i = 1; i < records.size(); i++) {
+                String[] record = records.get(i);
+                if (record.length >= 6) {
+                    String employeeNumber = record[0];
+                    String leaveType = record[1];
+                    Date from = new java.text.SimpleDateFormat("MM-dd-yyyy").parse(record[2]);
+                    Date to = new java.text.SimpleDateFormat("MM-dd-yyyy").parse(record[3]);
+                    String reason = record[4];
+                    String status = record[5];
+
+                    requests.add(new LeaveRequest(employeeNumber, from, from, to, reason, leaveType, status));
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error reading leave requests: " + e.getMessage());
+        }
+
+        return requests;
+    }
+
+    public static void addLeaveRequest(LeaveRequest request) {
+        try (Writer writer = Files.newBufferedWriter(LEAVE_CSV, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+                CSVWriter csvWriter = new CSVWriter(writer,
+                        CSVWriter.DEFAULT_SEPARATOR,
+                        CSVWriter.NO_QUOTE_CHARACTER,
+                        CSVWriter.DEFAULT_ESCAPE_CHARACTER,
+                        CSVWriter.RFC4180_LINE_END)) {
+
+            csvWriter.writeNext(request.toCSVArray());
+
+        } catch (IOException e) {
+            System.err.println("Error adding leave request: " + e.getMessage());
+        }
+    }
+
+    public static void updateLeaveRequestStatus(String employeeNumber, Date requestDate, String newStatus) {
+        List<LeaveRequest> allRequests = readLeaveRequests();
+        java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("MM-dd-yyyy");
+
+        for (LeaveRequest request : allRequests) {
+            if (request.getEmployeeNumber().equals(employeeNumber) &&
+                    df.format(request.getFrom()).equals(df.format(requestDate))) {
+                request.setStatus(newStatus);
+                break;
+            }
+        }
+
+        writeLeaveRequest(allRequests);
+    }
+
+    public static List<LeaveRequest> getLeaveRequestsByEmployee(String employeeNumber) {
+        List<LeaveRequest> allRequests = readLeaveRequests();
+        List<LeaveRequest> employeeRequests = new ArrayList<>();
+
+        for (LeaveRequest request : allRequests) {
+            if (request.getEmployeeNumber().equals(employeeNumber)) {
+                employeeRequests.add(request);
+            }
+        }
+
+        return employeeRequests;
+    }
+
+    public static void writeLeaveRequest(List<LeaveRequest> logs) {
+        try (Writer writer = Files.newBufferedWriter(LEAVE_CSV, StandardOpenOption.CREATE,
+                StandardOpenOption.TRUNCATE_EXISTING);
+                CSVWriter csvWriter = new CSVWriter(writer,
+                        CSVWriter.DEFAULT_SEPARATOR,
+                        CSVWriter.NO_QUOTE_CHARACTER,
+                        CSVWriter.DEFAULT_ESCAPE_CHARACTER,
+                        CSVWriter.RFC4180_LINE_END)) {
+
+            String[] header = { "Employee #", "Leave Type", "Start Date", "End Date", "Reason", "Status" };
+            csvWriter.writeNext(header);
+
+            for (LeaveRequest request : logs) {
+                csvWriter.writeNext(request.toCSVArray());
+            }
+
+        } catch (IOException e) {
+            System.err.println("Error writing leave requests: " + e.getMessage());
+        }
+    }
 }

@@ -1,10 +1,9 @@
-package motorph.ui;
+package motorph.ui.employeeRole;
 
 import motorph.model.core.Employee;
 import motorph.ui.components.CustomFont;
 
 public class MyProfilePanel extends javax.swing.JPanel {
-    
 
     public MyProfilePanel(Employee employee) {
         initComponents();
@@ -12,7 +11,8 @@ public class MyProfilePanel extends javax.swing.JPanel {
     }
 
     private void displayEmployee(Employee e) {
-        if (e == null) return;
+        if (e == null)
+            return;
 
         empFullName.setText(e.getFullName());
         empNumVal.setText(e.getEmployeeNumber());
@@ -38,11 +38,8 @@ public class MyProfilePanel extends javax.swing.JPanel {
         empPositionVal.setEditable(false);
         empSupervisorVal.setEditable(false);
     }
-    
-            
-            
-            
-            
+
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -80,7 +77,7 @@ public class MyProfilePanel extends javax.swing.JPanel {
             }
         });
 
-        empFullName.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        empFullName.setFont(CustomFont.getExtendedSemiBold(20f));
         empFullName.setText("Full Name");
 
         lastName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -158,7 +155,7 @@ public class MyProfilePanel extends javax.swing.JPanel {
 
         editProfileButton.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
         editProfileButton.setForeground(new java.awt.Color(255, 255, 255));
-        editProfileButton.setText("Edit Profile");
+        editProfileButton.setText("Edit My Profile");
         editProfileButton.setBorder(null);
         editProfileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -174,7 +171,7 @@ public class MyProfilePanel extends javax.swing.JPanel {
                 .addGap(47, 47, 47)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(empFullName, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(empFullName, javax.swing.GroupLayout.DEFAULT_SIZE, 1014, Short.MAX_VALUE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -221,9 +218,9 @@ public class MyProfilePanel extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(48, 48, 48)
-                .addComponent(empFullName, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(56, 56, 56)
+                .addGap(65, 65, 65)
+                .addComponent(empFullName, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
+                .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(empNum)
                     .addComponent(empNumVal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -246,8 +243,8 @@ public class MyProfilePanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(address)
-                    .addComponent(addressVal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(38, 38, 38)
+                    .addComponent(addressVal, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(empStatus)
                     .addComponent(empStatusVal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -265,46 +262,45 @@ public class MyProfilePanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void empNumValActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_empNumValActionPerformed
+    private void empNumValActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_empNumValActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_empNumValActionPerformed
+    }// GEN-LAST:event_empNumValActionPerformed
 
-    private void phoneNumValActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_phoneNumValActionPerformed
+    private void phoneNumValActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_phoneNumValActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_phoneNumValActionPerformed
+    }// GEN-LAST:event_phoneNumValActionPerformed
 
-    private void birthdayValActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_birthdayValActionPerformed
+    private void birthdayValActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_birthdayValActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_birthdayValActionPerformed
+    }// GEN-LAST:event_birthdayValActionPerformed
 
-    private void lastNameValActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lastNameValActionPerformed
+    private void lastNameValActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_lastNameValActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_lastNameValActionPerformed
+    }// GEN-LAST:event_lastNameValActionPerformed
 
-    private void addressValActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addressValActionPerformed
+    private void addressValActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_addressValActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_addressValActionPerformed
+    }// GEN-LAST:event_addressValActionPerformed
 
-    private void firstNameValActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstNameValActionPerformed
+    private void firstNameValActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_firstNameValActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_firstNameValActionPerformed
+    }// GEN-LAST:event_firstNameValActionPerformed
 
-    private void empStatusValActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_empStatusValActionPerformed
+    private void empStatusValActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_empStatusValActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_empStatusValActionPerformed
+    }// GEN-LAST:event_empStatusValActionPerformed
 
-    private void empSupervisorValActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_empSupervisorValActionPerformed
+    private void empSupervisorValActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_empSupervisorValActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_empSupervisorValActionPerformed
+    }// GEN-LAST:event_empSupervisorValActionPerformed
 
-    private void empPositionValActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_empPositionValActionPerformed
+    private void empPositionValActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_empPositionValActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_empPositionValActionPerformed
+    }// GEN-LAST:event_empPositionValActionPerformed
 
-    private void editProfileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editProfileButtonActionPerformed
+    private void editProfileButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_editProfileButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_editProfileButtonActionPerformed
-
+    }// GEN-LAST:event_editProfileButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel address;
