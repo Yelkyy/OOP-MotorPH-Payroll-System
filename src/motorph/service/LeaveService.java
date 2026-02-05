@@ -2,9 +2,9 @@ package motorph.service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 import motorph.contracts.LeaveCrudOperations;
 import motorph.model.LeaveRequest;
+import motorph.model.EmployeeDetails;
 import motorph.repository.DataHandler;
 
 public class LeaveService implements LeaveCrudOperations {
@@ -19,8 +19,12 @@ public class LeaveService implements LeaveCrudOperations {
     }
 
     @Override
-    public void updateLeaveStatus(String employeeNumber, Date requestDate, String status) {
-        DataHandler.updateLeaveRequestStatus(employeeNumber, requestDate, status);
+    public void updateLeaveStatusByRequestId(String requestId, String status) {
+        DataHandler.updateLeaveRequestStatusById(requestId, status);
+    }
+
+    public void updateLeaveStatusByRequestId(String requestId, String status, String reviewedBy) {
+        DataHandler.updateLeaveRequestStatusById(requestId, status, reviewedBy);
     }
 
     @Override
@@ -33,18 +37,23 @@ public class LeaveService implements LeaveCrudOperations {
         return DataHandler.getLeaveRequestsByEmployee(employeeNumber);
     }
 
-    @Override
-    public List<LeaveRequest> findPendingLeaveRequests() {
-        return DataHandler.readLeaveRequests().stream()
-                .filter(request -> "Pending".equalsIgnoreCase(request.getStatus()))
-                .collect(Collectors.toList());
+    public void approveLeaveRequestById(String requestId) {
+        updateLeaveStatusByRequestId(requestId, "Approved");
     }
 
-    public void approveLeaveRequest(String employeeNumber, Date requestDate) {
-        updateLeaveStatus(employeeNumber, requestDate, "Approved");
+    public void approveLeaveRequestById(String requestId, String reviewedBy) {
+        updateLeaveStatusByRequestId(requestId, "Approved", reviewedBy);
     }
 
-    public void rejectLeaveRequest(String employeeNumber, Date requestDate) {
-        updateLeaveStatus(employeeNumber, requestDate, "Rejected");
+    public void rejectLeaveRequestById(String requestId) {
+        updateLeaveStatusByRequestId(requestId, "Rejected");
+    }
+
+    public void rejectLeaveRequestById(String requestId, String reviewedBy) {
+        updateLeaveStatusByRequestId(requestId, "Rejected", reviewedBy);
+    }
+
+    public EmployeeDetails getEmployeeDetails(String employeeNumber) {
+        return EmployeeService.getEmployeeById(employeeNumber);
     }
 }

@@ -1,9 +1,11 @@
 package motorph.ui.components;
 
 import motorph.model.Role;
-import motorph.ui.Attendance;
+import motorph.model.users.HrUser;
+import motorph.ui.AttendanceManagement;
 import motorph.ui.EmployeePanel;
 import motorph.ui.DashboardPanel;
+import motorph.ui.LeaveManagement;
 import motorph.ui.MenuHandler;
 import motorph.ui.PayrunsPanel;
 import motorph.ui.employeeRole.MyProfilePanel;
@@ -43,21 +45,16 @@ public class Menu extends JComponent {
 
             // Employee self-service (EMPLOYEE only)
             new MenuHandler("2White", "My Profile", MenuHandler.menuType.MENU),
-            new MenuHandler("3White", "My Attendance", MenuHandler.menuType.MENU),
+            new MenuHandler("3White", "Attendance", MenuHandler.menuType.MENU),
             new MenuHandler("3White", "Leave", MenuHandler.menuType.MENU),
-            new MenuHandler("3White", "My Payslip", MenuHandler.menuType.MENU),
+            new MenuHandler("3White", "Payslip", MenuHandler.menuType.MENU),
 
             // Non-employee dashboard
             new MenuHandler("0White", "Dashboard", MenuHandler.menuType.MENU),
-
-            // Admin / HR
-            new MenuHandler("2White", "Employee", MenuHandler.menuType.MENU),
-
-            // Admin / HR / Finance
-            new MenuHandler("3White", "Attendance", MenuHandler.menuType.MENU),
-
-            // Admin / Finance
-            new MenuHandler("3", "Payroll", MenuHandler.menuType.MENU),
+            new MenuHandler("2White", "Employee Management", MenuHandler.menuType.MENU),
+            new MenuHandler("3White", "Attendance Overview", MenuHandler.menuType.MENU),
+            new MenuHandler("2White", "Leave Management", MenuHandler.menuType.MENU),
+            new MenuHandler("3", "Payroll Management", MenuHandler.menuType.MENU),
             // Spacers
             new MenuHandler("", "", MenuHandler.menuType.MENU),
             new MenuHandler("", "", MenuHandler.menuType.MENU),
@@ -166,15 +163,15 @@ public class Menu extends JComponent {
             return role != Role.EMPLOYEE;
         }
 
-        if ("Employee".equals(name)) {
+        if ("Employee Management".equals(name)) {
             return role == Role.ADMIN || role == Role.HR;
         }
 
-        if ("Attendance".equals(name)) {
-            return role == Role.ADMIN || role == Role.HR || role == Role.FINANCE;
+        if ("Attendance Overview".equals(name) || "Leave Management".equals(name)) {
+            return role == Role.ADMIN || role == Role.HR;
         }
 
-        if ("Payroll".equals(name)) {
+        if ("Payroll Management".equals(name)) {
             return role == Role.ADMIN || role == Role.FINANCE;
         }
 
@@ -236,13 +233,16 @@ public class Menu extends JComponent {
                 case "Dashboard":
                     newPanel = new DashboardPanel(firstName);
                     break;
-                case "Employee":
+                case "Employee Management":
                     newPanel = new EmployeePanel("Employee List");
                     break;
-                case "Attendance":
-                    newPanel = new Attendance();
+                case "Attendance Overview":
+                    newPanel = new AttendanceManagement();
                     break;
-                case "Payroll":
+                case "Leave Management":
+                    newPanel = new LeaveManagement((HrUser) loggedInEmployee);
+                    break;
+                case "Payroll Management":
                     newPanel = new PayrunsPanel();
                     break;
             }

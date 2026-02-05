@@ -107,7 +107,7 @@ public class DataHandler {
                 // Malformed row check
                 if (parts.length != 6) {
                     System.out.println(
-                            "⚠️ Skipping malformed time log at line " + lineNum + ": " + Arrays.toString(parts));
+                            "Skipping malformed time log at line " + lineNum + ": " + Arrays.toString(parts));
                     continue;
                 }
 
@@ -123,7 +123,7 @@ public class DataHandler {
             }
 
         } catch (IOException e) {
-            System.err.println("❌ Error reading time logs: " + e.getMessage());
+            System.err.println("Error reading time logs: " + e.getMessage());
         }
 
         return timeLogs;
@@ -151,7 +151,7 @@ public class DataHandler {
             }
 
             csvWriter.writeNext(new String[] { empId, lastName, firstName, date, logIn, logOut });
-            System.out.println("✅ Time log recorded for Employee #" + empId);
+            System.out.println("Time log recorded for Employee #" + empId);
 
         } catch (IOException e) {
             System.err.println("Error writing time log: " + e.getMessage());
@@ -176,7 +176,7 @@ public class DataHandler {
                 csvWriter.writeNext(emp.toCSVArray());
             }
 
-            System.out.println("✅ Employee data written to CSV.");
+            System.out.println("Employee data written to CSV.");
 
         } catch (IOException e) {
             System.err.println("Error writing employee data: " + e.getMessage());
@@ -195,7 +195,7 @@ public class DataHandler {
                         CSVWriter.RFC4180_LINE_END)) {
 
             csvWriter.writeNext(emp.toCSVArray());
-            System.out.println("✅ Employee added to CSV: " + emp.getEmployeeNumber());
+            System.out.println("Employee added to CSV: " + emp.getEmployeeNumber());
 
         } catch (IOException e) {
             System.err.println("Error adding employee: " + e.getMessage());
@@ -234,9 +234,9 @@ public class DataHandler {
 
         if (removed) {
             writeEmployeeData(employees);
-            System.out.println("🗑️ Employee #" + employeeNumber + " removed.");
+            System.out.println("Employee #" + employeeNumber + " removed.");
         } else {
-            System.out.println("⚠️ Employee #" + employeeNumber + " not found.");
+            System.out.println("Employee #" + employeeNumber + " not found.");
         }
     }
 
@@ -257,9 +257,9 @@ public class DataHandler {
 
         if (updated) {
             writeEmployeeData(employees);
-            System.out.println("✅ Employee #" + updatedEmployee.getEmployeeNumber() + " updated.");
+            System.out.println("Employee #" + updatedEmployee.getEmployeeNumber() + " updated.");
         } else {
-            System.out.println("⚠️ Employee #" + updatedEmployee.getEmployeeNumber() + " not found.");
+            System.out.println("Employee #" + updatedEmployee.getEmployeeNumber() + " not found.");
         }
     }
 
@@ -376,6 +376,23 @@ public class DataHandler {
         return "User";
     }
 
+    public static String generateLeaveRequestId() {
+        List<LeaveRequest> requests = readLeaveRequests();
+        int maxId = 0;
+
+        for (LeaveRequest req : requests) {
+            try {
+                int id = Integer.parseInt(req.getRequestId());
+                if (id > maxId)
+                    maxId = id;
+            } catch (NumberFormatException e) {
+                // Ignore malformed IDs
+            }
+        }
+
+        return String.valueOf(maxId + 1);
+    }
+
     public static List<LeaveRequest> readLeaveRequests() {
         List<LeaveRequest> requests = new ArrayList<>();
 
@@ -391,15 +408,27 @@ public class DataHandler {
 
             for (int i = 1; i < records.size(); i++) {
                 String[] record = records.get(i);
-                if (record.length >= 6) {
-                    String employeeNumber = record[0];
-                    String leaveType = record[1];
-                    Date from = new java.text.SimpleDateFormat("MM-dd-yyyy").parse(record[2]);
-                    Date to = new java.text.SimpleDateFormat("MM-dd-yyyy").parse(record[3]);
-                    String reason = record[4];
-                    String status = record[5];
+                if (record.length >= 8) {
+                    String requestId = record[0];
+                    String employeeNumber = record[1];
+                    Date requestDate = new java.text.SimpleDateFormat("MM-dd-yyyy").parse(record[2]);
+                    String leaveType = record[3];
+                    Date from = new java.text.SimpleDateFormat("MM-dd-yyyy").parse(record[4]);
+                    Date to = new java.text.SimpleDateFormat("MM-dd-yyyy").parse(record[5]);
+                    String reason = record[6];
+                    String status = record[7];
+                    String reviewedBy = record.length > 8 && !record[8].trim().isEmpty() ? record[8] : null;
+                    Date dateReviewed = null;
+                    if (record.length > 9 && !record[9].trim().isEmpty()) {
+                        try {
+                            dateReviewed = new java.text.SimpleDateFormat("MM-dd-yyyy").parse(record[9]);
+                        } catch (Exception ex) {
+                            // ignore parse error
+                        }
+                    }
 
-                    requests.add(new LeaveRequest(employeeNumber, from, from, to, reason, leaveType, status));
+                    requests.add(new LeaveRequest(requestId, employeeNumber, requestDate, from, to, reason, leaveType,
+                            status, reviewedBy, dateReviewed));
                 }
             }
         } catch (Exception e) {
@@ -424,14 +453,20 @@ public class DataHandler {
         }
     }
 
-    public static void updateLeaveRequestStatus(String employeeNumber, Date requestDate, String newStatus) {
+    public static void updateLeaveRequestStatusById(String requestId, String newStatus) {
+        updateLeaveRequestStatusById(requestId, newStatus, null);
+    }
+
+    public static void updateLeaveRequestStatusById(String requestId, String newStatus, String reviewedBy) {
         List<LeaveRequest> allRequests = readLeaveRequests();
-        java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("MM-dd-yyyy");
 
         for (LeaveRequest request : allRequests) {
-            if (request.getEmployeeNumber().equals(employeeNumber) &&
-                    df.format(request.getFrom()).equals(df.format(requestDate))) {
+            if (request.getRequestId().equals(requestId)) {
                 request.setStatus(newStatus);
+                if (reviewedBy != null) {
+                    request.setReviewedBy(reviewedBy);
+                    request.setDateReviewed(new Date());
+                }
                 break;
             }
         }
@@ -461,7 +496,8 @@ public class DataHandler {
                         CSVWriter.DEFAULT_ESCAPE_CHARACTER,
                         CSVWriter.RFC4180_LINE_END)) {
 
-            String[] header = { "Employee #", "Leave Type", "Start Date", "End Date", "Reason", "Status" };
+            String[] header = { "Request #", "Employee #", "Request Date", "Leave Type", "Date From", "Date To",
+                    "Reason", "Status", "Reviewed By", "Date Reviewed" };
             csvWriter.writeNext(header);
 
             for (LeaveRequest request : logs) {

@@ -21,10 +21,8 @@ public class HrUser extends Employee {
     public List<String> getMenuItems() {
         return List.of(
                 "My Profile",
-                "My Payslip",
-                "Employee", // CRUD
-                "Attendance", // view all
-                "Leave Approval" // approve/reject
-        );
+                "Attendance Overview",
+                "Employee Management",
+                "Leave Management");
     }
 }

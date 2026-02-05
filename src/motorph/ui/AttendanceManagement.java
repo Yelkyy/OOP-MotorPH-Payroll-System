@@ -15,7 +15,7 @@ import java.util.List;
 import motorph.ui.components.CustomFont;
 
 
-public class Attendance extends javax.swing.JPanel {
+public class AttendanceManagement extends javax.swing.JPanel {
     
     private int currentPage = 1;
     private int rowsPerPage = 17;  
@@ -23,7 +23,7 @@ public class Attendance extends javax.swing.JPanel {
 
     private List<EmployeeTimeLogs> filteredLogs = null;
 
-    public Attendance() {
+    public AttendanceManagement() {
         initComponents();
 
         
@@ -248,7 +248,7 @@ public class Attendance extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(boarder1, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(27, 27, 27)
+                .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnPrev)
@@ -269,7 +269,7 @@ public class Attendance extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(refreshButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 983, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

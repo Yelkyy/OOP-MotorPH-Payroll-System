@@ -26,4 +26,5 @@ public class FinanceUser extends Employee {
                 "View Payroll Reports",
                 "Print Payslip");
     }
+
 }
