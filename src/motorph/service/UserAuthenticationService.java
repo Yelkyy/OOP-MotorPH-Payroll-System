@@ -1,8 +1,5 @@
 package motorph.service;
 
-import motorph.model.Role;
-import motorph.model.User;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,18 +8,12 @@ import java.nio.file.Paths;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import motorph.model.EmployeeDetails;
+import motorph.model.Role;
 import motorph.model.core.Employee;
-import motorph.model.users.AdminUser;
-import motorph.model.users.EmployeeUser;
-import motorph.model.users.FinanceUser;
-import motorph.model.users.HrUser;
-import static motorph.service.EmployeeService.getEmployeeById;
 
 public class UserAuthenticationService {
-    
 
-    public static User authenticate(String username, String password) {
+    public static Employee authenticate(String username, String password) {
         Path filePath = Paths.get("resources", "MotorPH Users.csv");
 
         try (BufferedReader reader = Files.newBufferedReader(filePath)) {
@@ -38,29 +29,25 @@ public class UserAuthenticationService {
 
                 String csvUsername = parts[0].trim();
                 String csvPassword = parts[1].replaceAll("[\\r\\n]+", "").trim();
-                String firstName = parts[2].trim();
-                String lastName = parts[3].trim();
                 String usrRole = parts[4].trim();
                 String employeeId = parts[5].trim();
 
                 if (csvUsername.equalsIgnoreCase(username.trim())
                         && csvPassword.equals(password.trim())) {
 
-                Role role;
-                try {
-                    role = Role.valueOf(usrRole.toUpperCase());
-                } catch (IllegalArgumentException badRole) {
-                    System.out.println("Invalid role value in CSV for user " + csvUsername);
-                    return null;
-                }
+                    // employee record must exist (for ALL accounts)
+                    if (!employeeExists(employeeId)) {
+                        System.out.println("Login blocked: Employee record not found for employee #" + employeeId);
+                        return null;
+                    }
 
-                // employee record must exist (for ALL accounts)
-                if (!employeeExists(employeeId)) {
-                    System.out.println("Login blocked: Employee record not found for employee #" + employeeId);
-                    return null;
-                }
+                    if (!isValidRole(usrRole)) {
+                        System.out.println("Invalid role value in CSV for user " + csvUsername);
+                        return null;
+                    }
 
-                return new User(csvUsername, firstName, lastName, role, employeeId);
+                    Role role = Role.valueOf(usrRole.toUpperCase());
+                    return EmployeeService.loadEmployeeForRole(employeeId, role);
                 }
 
             }
@@ -80,13 +67,21 @@ public class UserAuthenticationService {
             String empNo = m.group(1);
 
             if (password.trim().equals(empNo) && employeeExists(empNo)) {
-                String[] name = getEmployeeName(empNo);
-                return new User(username.trim(), name[0], name[1], Role.EMPLOYEE, empNo);
+                return EmployeeService.loadEmployeeForRole(empNo, Role.EMPLOYEE);
             }
         }
 
         return null;
 
+    }
+
+    private static boolean isValidRole(String roleValue) {
+        try {
+            Role.valueOf(roleValue.toUpperCase());
+            return true;
+        } catch (IllegalArgumentException ex) {
+            return false;
+        }
     }
 
     private static boolean employeeExists(String employeeNumber) {
@@ -112,49 +107,5 @@ public class UserAuthenticationService {
 
         return false;
     }
-
-    private static String[] getEmployeeName(String employeeNumber) {
-        Path empFilePath = Paths.get("resources", "Copy of MotorPH Employee Data.csv");
-
-        try (BufferedReader reader = Files.newBufferedReader(empFilePath)) {
-            String line;
-            reader.readLine(); // skip header
-
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split("\",\"");
-
-                if (parts.length > 2) {
-                    String empNo = parts[0].replace("\"", "").trim();
-                    if (employeeNumber.equals(empNo)) {
-                        String lastName = parts[1].replace("\"", "").trim();
-                        String firstName = parts[2].replace("\"", "").trim();
-                        return new String[] { firstName, lastName };
-                    }
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("Error reading employee data CSV: " + e.getMessage());
-        }
-
-        return new String[] { "Employee", employeeNumber };
-    }
-    
-    public Employee getLoggedInEmp(User user) {
-        EmployeeDetails details = getEmployeeById(user.getEmployeeNumber());
-
-        if (details == null) {
-            throw new IllegalStateException(
-                "Employee not found: " + user.getEmployeeNumber()
-            );
-        }
-
-        return switch (user.getRole()) {
-            case ADMIN   -> new AdminUser(details);
-            case HR      -> new HrUser(details);
-            case FINANCE -> new FinanceUser(details);
-            case EMPLOYEE -> new EmployeeUser(details);
-        };
-    }
-
 
 }

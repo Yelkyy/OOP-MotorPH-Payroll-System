@@ -10,20 +10,21 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
-import motorph.model.EmployeeDetails;
-import motorph.repository.DataHandler;
+import motorph.model.core.Employee;
+import motorph.dao.DataHandler;
 import motorph.model.EmployeeTimeLogs;
 import motorph.service.PayrollService;
-import motorph.ui.components.CustomFont;
+import motorph.ui.util.CustomFont;
+import motorph.service.EmployeeService;
 
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import motorph.ui.components.MyRender;
+import motorph.ui.util.MyRender;
 
 public class PayrunsPanel extends javax.swing.JPanel {
 
-    private List<EmployeeDetails> employees;
+    private List<Employee> employees;
     private List<EmployeeTimeLogs> timeLogs;
     private List<LocalDate> payDates;
 
@@ -68,7 +69,7 @@ public class PayrunsPanel extends javax.swing.JPanel {
     }
 
     private void loadData() {
-        employees = DataHandler.readEmployeeDetails();
+        employees = EmployeeService.getAllEmployees();
         timeLogs = DataHandler.readEmployeeTimeLogs();
         payDates = getPayDatesFromTimeLogs();
         loadPayRuns();
@@ -177,7 +178,7 @@ public class PayrunsPanel extends javax.swing.JPanel {
         String monthYear = cutoff.format(DateTimeFormatter.ofPattern("MM-yyyy"));
         int payPeriod = (cutoff.getDayOfMonth() == 15) ? 1 : 2;
 
-        for (EmployeeDetails emp : employees) {
+        for (Employee emp : employees) {
             List<EmployeeTimeLogs> empLogs = timeLogs.stream()
                     .filter(log -> log.getEmployeeNumber().equals(emp.getEmployeeNumber()))
                     .filter(log -> isInPayPeriod(parseTimelogDate(log.getDate()), cutoff))

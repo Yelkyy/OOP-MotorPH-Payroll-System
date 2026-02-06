@@ -1,53 +1,56 @@
 package motorph.service;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import motorph.contracts.PayrollCalculator;
-import motorph.model.EmployeeDetails;
+import motorph.model.core.Employee;
+import motorph.model.payroll.PayrollCalculator.PayrollResult;
 import motorph.model.EmployeeTimeLogs;
-import motorph.model.payroll.DeductionBreakdown;
 
 /**
  * Service class providing payroll calculation operations for the MotorPH
  * system.
- * Delegates to PayrollCalculator implementations and handles input validation
- * for payroll processing.
+ * 
+ * Responsibilities:
+ * - Orchestrates payroll operations (collect inputs, validate, coordinate
+ * calculations)
+ * - Calls Employee.computeDeductions() via Payable interface (Employee
+ * delegates to PayrollCalculator)
+ * - Returns results to UI/panels
+ * 
+ * Architecture:
+ * - Employee implements Payable and owns payroll calculation behavior
+ * - PayrollCalculator is the math engine that Employee delegates to
+ * - PayrollService coordinates the workflow
  */
 public class PayrollService {
 
-    private static final DateTimeFormatter MONTH_YEAR_FMT = DateTimeFormatter.ofPattern("MM-yyyy");
-
-    // One shared calculator instance (standard rules)
-    private static final PayrollCalculator CALCULATOR = new StandardPayrollCalculator();
-
     private PayrollService() {
-        // utility/service facade; prevent instantiation for now
+        // utility/service facade; prevent instantiation
     }
 
     // Public API (UI-safe)
 
-    public static DeductionBreakdown computeDeductions(EmployeeDetails employee,
+    public static PayrollResult computeDeductions(Employee employee,
             List<EmployeeTimeLogs> logs,
             String monthYear,
             int payPeriod) {
         validateInputs(employee, monthYear, payPeriod);
-        return CALCULATOR.computeDeductions(employee, logs, monthYear.trim(), payPeriod);
+        // Use Payable interface contract
+        return employee.computeDeductions(logs, monthYear.trim(), payPeriod);
     }
 
-    public static DeductionBreakdown computeDeductionsByCutoff(EmployeeDetails employee,
+    public static PayrollResult computeDeductionsByCutoff(Employee employee,
             List<EmployeeTimeLogs> logs,
             LocalDate cutoffDate) {
         if (cutoffDate == null) {
             throw new IllegalArgumentException("cutoffDate must not be null");
         }
-        String monthYear = cutoffDate.format(MONTH_YEAR_FMT);
-        int payPeriod = (cutoffDate.getDayOfMonth() <= 15) ? 1 : 2;
-        return computeDeductions(employee, logs, monthYear, payPeriod);
+        // Use Payable interface contract
+        return employee.computeDeductionsByCutoff(logs, cutoffDate);
     }
 
-    public static DeductionBreakdown computeDeductions(EmployeeDetails employee,
+    public static PayrollResult computeDeductions(Employee employee,
             String monthYear,
             int payPeriod) {
         validateInputs(employee, monthYear, payPeriod);
@@ -55,17 +58,17 @@ public class PayrollService {
         return computeDeductions(employee, logs, monthYear, payPeriod);
     }
 
-    public static double calculateNetPay(EmployeeDetails employee,
+    public static double calculateNetPay(Employee employee,
             List<EmployeeTimeLogs> logs,
             String monthYear,
             int payPeriod) {
-        DeductionBreakdown breakdown = computeDeductions(employee, logs, monthYear, payPeriod);
+        PayrollResult breakdown = computeDeductions(employee, logs, monthYear, payPeriod);
         return breakdown.netPay;
     }
 
     // Validation helpers
 
-    private static void validateInputs(EmployeeDetails employee, String monthYear, int payPeriod) {
+    private static void validateInputs(Employee employee, String monthYear, int payPeriod) {
         if (employee == null) {
             throw new IllegalArgumentException("employee must not be null");
         }

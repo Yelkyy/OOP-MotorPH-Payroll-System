@@ -1,4 +1,4 @@
-package motorph.ui.components;
+package motorph.ui.util;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -43,7 +43,7 @@ public class MyRender extends DefaultTableCellRenderer {
 
         return label;
     }
-    
+
     public static JButton createDashboardButton(String text, Icon icon, boolean isSelected) {
         JButton button = new JButton(text, icon);
         button.setHorizontalAlignment(SwingConstants.LEFT);
@@ -67,8 +67,6 @@ public class MyRender extends DefaultTableCellRenderer {
         return button;
     }
 
-
-    
     public static Font loadCustomFont(float size) {
         try {
             InputStream is = MyRender.class.getResourceAsStream("/fonts/NeuePlakExtendedRegular.ttf");
@@ -79,10 +77,11 @@ public class MyRender extends DefaultTableCellRenderer {
             return new Font("SansSerif", Font.PLAIN, (int) size); // fallback
         }
     }
-    
+
     public static void applyButtonStyle(JButton button, boolean isActive) {
-        if (button == null) return;
-        
+        if (button == null)
+            return;
+
         if (isActive) {
             button.setBackground(new Color(0, 102, 204)); // active blue
             button.setForeground(Color.WHITE);
@@ -93,9 +92,9 @@ public class MyRender extends DefaultTableCellRenderer {
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-       
+
     }
-    
+
     public static JMenuItem createMenuItemWithLeftIcon(String text, Icon icon, int matchWidth) {
         JMenuItem item = new JMenuItem(text, icon);
         item.setFont(new Font("Segoe UI", Font.PLAIN, 13));
@@ -103,8 +102,6 @@ public class MyRender extends DefaultTableCellRenderer {
         item.setIconTextGap(10); // Space between text and icon
         item.setPreferredSize(new Dimension(matchWidth, item.getPreferredSize().height)); // Optional fixed width
         return item;
-}
-
-
+    }
 
 }

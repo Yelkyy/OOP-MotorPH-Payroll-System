@@ -1,10 +1,8 @@
 package motorph.ui;
 
 import motorph.ui.employeeRole.MyProfilePanel;
-import motorph.model.User;
 import motorph.model.Role;
 import motorph.model.core.Employee;
-import motorph.service.EmployeeService;
 
 import javax.swing.JPanel;
 
@@ -19,27 +17,26 @@ import javax.swing.JPanel;
  */
 public class MainFrame extends javax.swing.JFrame {
         private static JPanel mainBody;
-        private User loggedInUser;
+        @SuppressWarnings("unused")
         private Employee loggedInEmployee;
 
-        public MainFrame(User user, Employee employee) {
+        public MainFrame(Employee employee) {
                 initComponents();
                 setLocationRelativeTo(null);
 
-                this.loggedInUser = user;
                 this.loggedInEmployee = employee;
 
                 mainBody = body;
                 menu1.setMainPanel(body);
-                menu1.setRole(user.getRole());
-                menu1.setFirstName(user.getFirstName());
+                menu1.setRole(employee.getRole());
+                menu1.setFirstName(employee.getFirstName());
                 menu1.setEmployee(employee);
 
-                if (user.getRole() == Role.EMPLOYEE) {
+                if (employee.getRole() == Role.EMPLOYEE) {
                         showPanel(new MyProfilePanel(employee));
                         menu1.selectMenuItemByName("My Profile");
                 } else {
-                        showPanel(new DashboardPanel(user.getFirstName()));
+                        showPanel(new DashboardPanel(employee.getFirstName()));
                         menu1.selectMenuItemByName("Dashboard");
                 }
         }
@@ -64,86 +61,106 @@ public class MainFrame extends javax.swing.JFrame {
                 mainBody.repaint();
         }
 
-        @SuppressWarnings("unchecked")
         // <editor-fold defaultstate="collapsed" desc="Generated
         // <editor-fold defaultstate="collapsed" desc="Generated
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+        // <editor-fold defaultstate="collapsed" desc="Generated
+        // Code">//GEN-BEGIN:initComponents
+        private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        menu1 = new motorph.ui.components.Menu();
-        jLabel1 = new javax.swing.JLabel();
-        body = new javax.swing.JPanel();
+                jPanel1 = new javax.swing.JPanel();
+                jScrollPane2 = new javax.swing.JScrollPane();
+                menu1 = new motorph.ui.components.Menu();
+                jLabel1 = new javax.swing.JLabel();
+                body = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setBackground(new java.awt.Color(255, 255, 255));
-        setMinimumSize(new java.awt.Dimension(1254, 720));
-        setResizable(false);
+                setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+                setBackground(new java.awt.Color(255, 255, 255));
+                setMinimumSize(new java.awt.Dimension(1254, 720));
+                setResizable(false);
 
-        jPanel1.setBackground(new java.awt.Color(0, 66, 102));
-        jPanel1.setMaximumSize(null);
+                jPanel1.setBackground(new java.awt.Color(0, 66, 102));
+                jPanel1.setMaximumSize(null);
 
-        jScrollPane2.setBackground(new java.awt.Color(0, 66, 102));
-        jScrollPane2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jScrollPane2.setForeground(new java.awt.Color(255, 255, 255));
-        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-        jScrollPane2.setViewportView(menu1);
+                jScrollPane2.setBackground(new java.awt.Color(0, 66, 102));
+                jScrollPane2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+                jScrollPane2.setForeground(new java.awt.Color(255, 255, 255));
+                jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+                jScrollPane2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+                jScrollPane2.setViewportView(menu1);
 
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/motorph/icons/Group 222 (2).png"))); // NOI18N
+                jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+                jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/motorph/icons/Group 222 (2).png"))); // NOI18N
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 568, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
-        );
+                javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+                jPanel1.setLayout(jPanel1Layout);
+                jPanel1Layout.setHorizontalGroup(
+                                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout
+                                                                .createSequentialGroup()
+                                                                .addContainerGap()
+                                                                .addComponent(jLabel1,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                Short.MAX_VALUE)
+                                                                .addContainerGap())
+                                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                                                .addComponent(jScrollPane2,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                241,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(0, 0, Short.MAX_VALUE)));
+                jPanel1Layout.setVerticalGroup(
+                                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                                                .addContainerGap()
+                                                                .addComponent(jLabel1,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                92,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                Short.MAX_VALUE)
+                                                                .addComponent(jScrollPane2,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                568,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(23, 23, 23)));
 
-        body.setName(""); // NOI18N
-        body.setRequestFocusEnabled(false);
-        body.setLayout(new java.awt.BorderLayout());
+                body.setName(""); // NOI18N
+                body.setRequestFocusEnabled(false);
+                body.setLayout(new java.awt.BorderLayout());
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(body, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(1053, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+                javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+                getContentPane().setLayout(layout);
+                layout.setHorizontalGroup(
+                                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(layout.createSequentialGroup()
+                                                                .addComponent(jPanel1,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(0, 0, 0)
+                                                                .addComponent(body,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addContainerGap(1053, Short.MAX_VALUE)));
+                layout.setVerticalGroup(
+                                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
 
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
+                pack();
+        }// </editor-fold>//GEN-END:initComponents
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel body;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private motorph.ui.components.Menu menu1;
-    // End of variables declaration//GEN-END:variables
+        // Variables declaration - do not modify//GEN-BEGIN:variables
+        private javax.swing.JPanel body;
+        private javax.swing.JLabel jLabel1;
+        private javax.swing.JPanel jPanel1;
+        private javax.swing.JScrollPane jScrollPane2;
+        private motorph.ui.components.Menu menu1;
+        // End of variables declaration//GEN-END:variables
 }

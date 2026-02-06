@@ -1,8 +1,7 @@
 package motorph.ui;
 
-
 import motorph.model.EmployeeTimeLogs;
-import motorph.repository.DataHandler;
+import motorph.dao.DataHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -12,13 +11,12 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import motorph.ui.components.CustomFont;
-
+import motorph.ui.util.CustomFont;
 
 public class AttendanceManagement extends javax.swing.JPanel {
-    
+
     private int currentPage = 1;
-    private int rowsPerPage = 17;  
+    private int rowsPerPage = 17;
     private List<EmployeeTimeLogs> timeLogs;
 
     private List<EmployeeTimeLogs> filteredLogs = null;
@@ -26,17 +24,16 @@ public class AttendanceManagement extends javax.swing.JPanel {
     public AttendanceManagement() {
         initComponents();
 
-        
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 
         for (int i = 0; i < attendanceLogTable.getColumnCount(); i++) {
             attendanceLogTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
-        
+
         loadTimeLogsToTable();
-    }   
-       
+    }
+
     public void loadTimeLogsToTable() {
         timeLogs = DataHandler.readEmployeeTimeLogs(); // Load from CSV or DB
         currentPage = 1;
@@ -56,12 +53,12 @@ public class AttendanceManagement extends javax.swing.JPanel {
             String totalHours = calculateHoursWorked(log.getLogIn(), log.getLogOut());
 
             model.addRow(new Object[] {
-                log.getEmployeeNumber(),
-                fullName,
-                log.getDate(),
-                log.getLogIn(),
-                log.getLogOut(),
-                totalHours
+                    log.getEmployeeNumber(),
+                    fullName,
+                    log.getDate(),
+                    log.getLogIn(),
+                    log.getLogOut(),
+                    totalHours
             });
         }
 
@@ -70,12 +67,11 @@ public class AttendanceManagement extends javax.swing.JPanel {
         btnPrev.setEnabled(currentPage > 1);
         btnNext.setEnabled(currentPage < totalPages);
     }
-    
+
     private void updateTablePage() {
         updateTablePage(timeLogs);
     }
 
-    
     private String calculateHoursWorked(String inTime, String outTime) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm");
@@ -86,28 +82,25 @@ public class AttendanceManagement extends javax.swing.JPanel {
             long minutes = duration.toMinutes() % 60;
             return String.format("%02d:%02d", hours, minutes);
         } catch (Exception e) {
-            System.out.println("Invalid time format: IN=" + inTime + ", OUT" + outTime );
+            System.out.println("Invalid time format: IN=" + inTime + ", OUT" + outTime);
             e.printStackTrace();
             return "Invalid";
         }
     }
-    
+
     private void updateFilteredTablePage() {
         if (filteredLogs != null) {
             updateTablePage(filteredLogs);
         }
     }
 
-    
-    
-    
-
-
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0),
+                new java.awt.Dimension(0, 32767));
         jScrollPane1 = new javax.swing.JScrollPane();
         attendanceLogTable = new javax.swing.JTable();
         searchButton = new javax.swing.JButton();
@@ -130,29 +123,29 @@ public class AttendanceManagement extends javax.swing.JPanel {
 
         attendanceLogTable.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         attendanceLogTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
-            },
-            new String [] {
-                "Employee #", "Employee Name", "Attendance Date", "In Time", "Out Time", "Total Worked Time"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
+                new Object[][] {
+                        { null, null, null, null, null, null },
+                        { null, null, null, null, null, null },
+                        { null, null, null, null, null, null },
+                        { null, null, null, null, null, null }
+                },
+                new String[] {
+                        "Employee #", "Employee Name", "Attendance Date", "In Time", "Out Time", "Total Worked Time"
+                }) {
+            Class[] types = new Class[] {
+                    java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class,
+                    java.lang.String.class, java.lang.Object.class
             };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+            boolean[] canEdit = new boolean[] {
+                    false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
+                return types[columnIndex];
             }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         attendanceLogTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -229,7 +222,8 @@ public class AttendanceManagement extends javax.swing.JPanel {
             }
         });
 
-        refreshButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/motorph/icons/refresh_20dp_000000_FILL0_wght400_GRAD0_opsz20.png"))); // NOI18N
+        refreshButton1.setIcon(new javax.swing.ImageIcon(
+                getClass().getResource("/motorph/icons/refresh_20dp_000000_FILL0_wght400_GRAD0_opsz20.png"))); // NOI18N
         refreshButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         refreshButton1.setBorderPainted(false);
         refreshButton1.setFocusPainted(false);
@@ -245,60 +239,92 @@ public class AttendanceManagement extends javax.swing.JPanel {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(boarder1, javax.swing.GroupLayout.Alignment.TRAILING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnPrev)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblPageInfo)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnNext))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(boarder1, javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(searchBar, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(lblSubTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(sortBttn, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(refreshButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 983, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(36, Short.MAX_VALUE))
-        );
+                                .addGap(35, 35, 35)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(btnPrev)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(lblPageInfo)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(btnNext))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(searchBar, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(
+                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(searchButton,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE, 32,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGroup(layout
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                false)
+                                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout
+                                                                .createSequentialGroup()
+                                                                .addComponent(lblSubTitle,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE, 265,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(
+                                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(sortBttn,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE, 48,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(
+                                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED,
+                                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                        Short.MAX_VALUE)
+                                                                .addComponent(refreshButton1,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE, 32,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addComponent(jScrollPane1,
+                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE, 983,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addContainerGap(36, Short.MAX_VALUE)));
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(52, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(searchBar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(boarder1, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(25, 25, 25)
-                                .addComponent(lblSubTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(refreshButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(sortBttn, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(38, 38, 38)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnPrev)
-                    .addComponent(btnNext)
-                    .addComponent(lblPageInfo))
-                .addContainerGap(111, Short.MAX_VALUE))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap(52, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(searchBar, javax.swing.GroupLayout.Alignment.TRAILING,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE, 28,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(searchButton, javax.swing.GroupLayout.Alignment.TRAILING,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE, 28,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(12, 12, 12)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(boarder1, javax.swing.GroupLayout.PREFERRED_SIZE, 8,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGroup(layout
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addGap(25, 25, 25)
+                                                                .addComponent(lblSubTitle,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE, 30,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout
+                                                                .createSequentialGroup()
+                                                                .addPreferredGap(
+                                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(refreshButton1,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE, 28,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(sortBttn, javax.swing.GroupLayout.PREFERRED_SIZE, 28,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(38, 38, 38)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(btnPrev)
+                                        .addComponent(btnNext)
+                                        .addComponent(lblPageInfo))
+                                .addContainerGap(111, Short.MAX_VALUE)));
 
         // Manually added the FocusListener below the searchBar setup
         searchBar.addFocusListener(new java.awt.event.FocusListener() {
@@ -321,8 +347,8 @@ public class AttendanceManagement extends javax.swing.JPanel {
 
         getAccessibleContext().setAccessibleName("");
     }// </editor-fold>//GEN-END:initComponents
-        
-    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+
+    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_searchButtonActionPerformed
 
         String empNumberInput = searchBar.getText().trim();
 
@@ -356,14 +382,14 @@ public class AttendanceManagement extends javax.swing.JPanel {
             currentPage = 1;
             updateFilteredTablePage();
         }
-    }//GEN-LAST:event_searchButtonActionPerformed
+    }// GEN-LAST:event_searchButtonActionPerformed
 
-    private void searchBarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBarActionPerformed
+    private void searchBarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_searchBarActionPerformed
         // TODO add your handling code here:
-        
-    }//GEN-LAST:event_searchBarActionPerformed
 
-    private void searchBarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchBarKeyPressed
+    }// GEN-LAST:event_searchBarActionPerformed
+
+    private void searchBarKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_searchBarKeyPressed
         if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
             if (searchBar.getText().trim().isEmpty()) {
                 filteredLogs = null;
@@ -372,34 +398,34 @@ public class AttendanceManagement extends javax.swing.JPanel {
                 searchButtonActionPerformed(null);
             }
         }
-    }//GEN-LAST:event_searchBarKeyPressed
+    }// GEN-LAST:event_searchBarKeyPressed
 
-    private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrevActionPerformed
+    private void btnPrevActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnPrevActionPerformed
         currentPage--;
-        if (filteredLogs != null){
+        if (filteredLogs != null) {
             updateFilteredTablePage();
         } else {
             updateTablePage(timeLogs);
         }
-    }//GEN-LAST:event_btnPrevActionPerformed
+    }// GEN-LAST:event_btnPrevActionPerformed
 
-    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnNextActionPerformed
         currentPage++;
         if (filteredLogs != null) {
             updateFilteredTablePage();
         } else {
             updateTablePage(timeLogs);
         }
-    }//GEN-LAST:event_btnNextActionPerformed
+    }// GEN-LAST:event_btnNextActionPerformed
 
-    private void sortBttnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortBttnActionPerformed
+    private void sortBttnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_sortBttnActionPerformed
         JPopupMenu sortMenu = new JPopupMenu();
 
         JMenuItem latestItem = new JMenuItem("Sort Date: Latest");
         JMenuItem oldestItem = new JMenuItem("Sort Date: Oldest");
 
         latestItem.addActionListener(e -> {
-            timeLogs.sort((a, b) -> b.getDate().compareTo(a.getDate())); 
+            timeLogs.sort((a, b) -> b.getDate().compareTo(a.getDate()));
             currentPage = 1;
             updateTablePage();
         });
@@ -413,11 +439,11 @@ public class AttendanceManagement extends javax.swing.JPanel {
         sortMenu.add(latestItem);
         sortMenu.add(oldestItem);
         sortMenu.show(sortBttn, 0, sortBttn.getHeight());
-    }//GEN-LAST:event_sortBttnActionPerformed
+    }// GEN-LAST:event_sortBttnActionPerformed
 
-    private void refreshButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButton1ActionPerformed
+    private void refreshButton1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_refreshButton1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_refreshButton1ActionPerformed
+    }// GEN-LAST:event_refreshButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable attendanceLogTable;

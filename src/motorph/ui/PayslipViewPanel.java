@@ -5,13 +5,11 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
 import java.util.List;
 import java.util.Locale;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import motorph.model.EmployeeDetails;
+import motorph.model.core.Employee;
+import motorph.model.payroll.PayrollCalculator.PayrollResult;
 import motorph.model.EmployeeTimeLogs;
 import motorph.service.PayrollService;
-import motorph.model.payroll.DeductionBreakdown;
 import motorph.service.EmployeeService;
 
 public class PayslipViewPanel extends JPanel {
@@ -36,6 +34,7 @@ public class PayslipViewPanel extends JPanel {
 
         public PayslipViewPanel() {
                 initComponents();
+                clearAllLabels();
         }
 
         public void setEmployeeId(String empId) {
@@ -59,7 +58,7 @@ public class PayslipViewPanel extends JPanel {
         }
 
         private void loadEmployeeData() {
-                EmployeeDetails emp = EmployeeService.getEmployeeById(employeeId);
+                Employee emp = EmployeeService.getEmployeeById(employeeId);
 
                 if (emp != null) {
                         empNum.setText(emp.getEmployeeNumber());
@@ -92,7 +91,7 @@ public class PayslipViewPanel extends JPanel {
                         List<EmployeeTimeLogs> logs = EmployeeService.getTimeLogsForEmployee(employeeId);
 
                         // Calculate breakdown
-                        DeductionBreakdown breakdown = PayrollService.computeDeductions(emp, logs, monthYear,
+                        PayrollResult breakdown = PayrollService.computeDeductions(emp, logs, monthYear,
                                         payPeriod);
 
                         // Set to labels
@@ -106,14 +105,47 @@ public class PayslipViewPanel extends JPanel {
                         deducTax.setText(String.format("₱ %,.2f", breakdown.tax));
                         totalDeducValue.setText(String.format("₱ %,.2f", breakdown.totalDeductions));
                         netPayValue.setText(String.format("₱ %,.2f", breakdown.netPay));
+                } else {
+                        // Clear all labels if employee not found
+                        clearAllLabels();
                 }
+        }
+
+        private void clearAllLabels() {
+                empNum.setText("");
+                empFullName.setText("");
+                empFullName2.setText("");
+                empPosition.setText("");
+                empDepartment.setText("");
+                sssNo.setText("");
+                PhilHealthNo.setText("");
+                PagibigNo.setText("");
+                tinNo.setText("");
+                basicPay.setText("");
+                RiceSub.setText("");
+                PhoneAllw.setText("");
+                ClothAllw.setText("");
+                totalCompValue.setText("");
+                sssVal.setText("");
+                philHealthVal.setText("");
+                pagIbigVal.setText("");
+                taxVal.setText("");
+                deducSss.setText("");
+                deducPhilHealth.setText("");
+                deducHDMF.setText("");
+                deducTax.setText("");
+                totalDeducValue.setText("");
+                netPayValue.setText("");
+                absences.setText("");
+                deducDeMinimis.setText("");
+                lateAndUnder.setText("");
+                allowance.setText("");
         }
 
         private String formatCurrency(double value) {
                 return String.format("₱%,.2f", value);
         }
 
-        @SuppressWarnings("unchecked")
         // <editor-fold defaultstate="collapsed" desc="Generated
         // Code">//GEN-BEGIN:initComponents
         private void initComponents() {

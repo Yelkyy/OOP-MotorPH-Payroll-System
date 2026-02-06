@@ -1,11 +1,12 @@
 package motorph.ui;
 
-import motorph.ui.components.CustomFont;
-import motorph.model.EmployeeDetails;
+import motorph.ui.util.CustomFont;
+import motorph.model.core.Employee;
 import motorph.model.EmployeeTimeLogs;
-import motorph.repository.DataHandler;
+import motorph.dao.DataHandler;
 import motorph.service.PayrollService;
 import motorph.ui.PayslipViewPanel;
+import motorph.service.EmployeeService;
 
 import java.util.List;
 import java.time.LocalDate;
@@ -21,7 +22,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
-import motorph.ui.components.MyRender;
+import motorph.ui.util.MyRender;
 
 public class DisplayPayruns extends javax.swing.JPanel {
     private int currentPage = 1;
@@ -119,23 +120,40 @@ public class DisplayPayruns extends javax.swing.JPanel {
     public void setTableData(String payDate) {
         this.currentPayDate = payDate;
 
-        List<EmployeeDetails> employees = DataHandler.readEmployeeDetails();
+        List<Employee> employees = EmployeeService.getAllEmployees();
         List<EmployeeTimeLogs> timeLogs = DataHandler.readEmployeeTimeLogs();
 
         DefaultTableModel model = (DefaultTableModel) empListTable.getModel();
         model.setRowCount(0);
 
-        int totalRecords = employees.size();
-        totalPages = (int) Math.ceil((double) totalRecords / rowsPerPage);
-        int startIndex = (currentPage - 1) * rowsPerPage;
-        int endIndex = Math.min(startIndex + rowsPerPage, totalRecords);
-
         LocalDate cutoffDate = parsePayDate(payDate);
         int payPeriod = (cutoffDate.getDayOfMonth() <= 15) ? 1 : 2;
         String monthYear = cutoffDate.format(DateTimeFormatter.ofPattern("MM-yyyy"));
 
+        // Filter employees to only those with time logs in the selected pay period
+        List<Employee> employeesWithLogs = new java.util.ArrayList<>();
+        for (Employee emp : employees) {
+            List<EmployeeTimeLogs> empLogs = timeLogs.stream()
+                    .filter(log -> log.getEmployeeNumber().equals(emp.getEmployeeNumber()))
+                    .filter(log -> {
+                        LocalDate logDate = parseTimelogDate(log.getDate());
+                        return isInPayPeriod(logDate, cutoffDate);
+                    })
+                    .toList();
+
+            // Only add employee if they have time logs in this pay period
+            if (!empLogs.isEmpty()) {
+                employeesWithLogs.add(emp);
+            }
+        }
+
+        int totalRecords = employeesWithLogs.size();
+        totalPages = (int) Math.ceil((double) totalRecords / rowsPerPage);
+        int startIndex = (currentPage - 1) * rowsPerPage;
+        int endIndex = Math.min(startIndex + rowsPerPage, totalRecords);
+
         for (int i = startIndex; i < endIndex; i++) {
-            EmployeeDetails emp = employees.get(i);
+            Employee emp = employeesWithLogs.get(i);
 
             List<EmployeeTimeLogs> empLogs = timeLogs.stream()
                     .filter(log -> log.getEmployeeNumber().equals(emp.getEmployeeNumber()))
@@ -511,7 +529,7 @@ public class DisplayPayruns extends javax.swing.JPanel {
         }
 
         // Find index in full employee list
-        List<EmployeeDetails> employees = DataHandler.readEmployeeDetails();
+        List<Employee> employees = EmployeeService.getAllEmployees();
         int index = -1;
         for (int i = 0; i < employees.size(); i++) {
             if (employees.get(i).getEmployeeNumber().equals(empNumberInput)) {

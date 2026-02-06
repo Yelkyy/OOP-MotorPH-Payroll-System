@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import motorph.ui.util.CustomFont;
 
 public class MenuItem extends JButton {
     private int index;
@@ -13,7 +14,7 @@ public class MenuItem extends JButton {
     public MenuItem(String name, int index) {
         super(name);
         this.index = index;
-        
+
         // Handle spacers: hide if no name
         if (name == null || name.trim().isEmpty()) {
             setVisible(false);
@@ -73,7 +74,7 @@ public class MenuItem extends JButton {
         Graphics2D g2 = (Graphics2D) g.create();
 
         if (selected) {
-            g2.setColor(new Color(3, 32, 48));  // Selected color
+            g2.setColor(new Color(3, 32, 48)); // Selected color
             g2.fillRect(0, 0, getWidth(), getHeight());
         } else if (hover) {
             g2.setColor(new Color(0, 90, 130)); // Hover color
@@ -81,6 +82,6 @@ public class MenuItem extends JButton {
         }
 
         g2.dispose();
-        super.paintComponent(g);  // Draw text and icon
+        super.paintComponent(g); // Draw text and icon
     }
 }

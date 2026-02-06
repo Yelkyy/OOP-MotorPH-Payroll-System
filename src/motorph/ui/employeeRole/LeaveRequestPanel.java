@@ -3,7 +3,7 @@ package motorph.ui.employeeRole;
 import motorph.model.core.Employee;
 import motorph.model.LeaveRequest;
 import motorph.service.LeaveService;
-import motorph.ui.components.CustomFont;
+import motorph.ui.util.CustomFont;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -464,7 +464,7 @@ public class LeaveRequestPanel extends javax.swing.JPanel {
 
                 try {
                         LeaveService leaveService = new LeaveService();
-                        String requestId = motorph.repository.DataHandler.generateLeaveRequestId();
+                        String requestId = motorph.dao.DataHandler.generateLeaveRequestId();
 
                         LeaveRequest request = new LeaveRequest(
                                         requestId,

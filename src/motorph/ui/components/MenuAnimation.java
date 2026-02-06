@@ -5,19 +5,14 @@ import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 
-
-
-
 /**
  * This class handles the animation for showing and hiding submenus in the menu.
- * It ensures that submenus are not repeatedly displayed when clicked multiple times.
+ * It ensures that submenus are not repeatedly displayed when clicked multiple
+ * times.
  */
 public class MenuAnimation {
-    
-    public static void showMenu(Component component, MenuItem item, MigLayout layout, boolean show){
-        // Get the preferred height of the component to animate towards
-        int height = component.getPreferredSize().height;
-        
+
+    public static void showMenu(Component component, MenuItem item, MigLayout layout, boolean show) {
         // Create an Animator with 300ms duration
         Animator animator = new Animator(300, new TimingTargetAdapter() {
             @Override
@@ -28,7 +23,7 @@ public class MenuAnimation {
                 // Avoid zero-height animation glitches
                 float animatedHeight = height * f;
                 if (animatedHeight < 1f) {
-                    animatedHeight = 1f;  // minimum to avoid invalid constraints
+                    animatedHeight = 1f; // minimum to avoid invalid constraints
                 }
 
                 // Format to avoid scientific notation

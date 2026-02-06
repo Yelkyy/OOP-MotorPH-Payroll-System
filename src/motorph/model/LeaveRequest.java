@@ -4,10 +4,11 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 
 /**
- * Data model for employee leave requests containing request dates, leave type,
- * and approval status.
- * NOTE: Not yet fully implemented. Intended for employee role leave request
- * submission and approval workflow.
+ * Represents an employee leave request in the MotorPH payroll system.
+ * Manages leave request details including dates, leave type, reason, and
+ * approval workflow.
+ * Tracks the complete lifecycle from submission to review with reviewer
+ * information and status updates.
  */
 public class LeaveRequest {
     private String requestId;
