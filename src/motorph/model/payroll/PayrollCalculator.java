@@ -231,4 +231,28 @@ public class PayrollCalculator {
 
         return Math.round(tax * 100.0) / 100.0;
     }
+
+    // ========== GROSS SALARY COMPUTATION (OVERLOADED) ==========
+
+    public double computeGrossSalary(Employee employee) {
+        return employee.getGrossSalary();
+    }
+
+    public double computeGrossSalary(Employee employee, List<EmployeeTimeLogs> logs) {
+        double baseGrossSalary = employee.getGrossSalary();
+        double overtimeHours = calculateOvertimeHours(logs, employee.getHourlyRate());
+        double overtimePay = overtimeHours * employee.getHourlyRate() * 1.25; // 25% premium
+        return baseGrossSalary + overtimePay;
+    }
+
+    public double computeGrossSalary(Employee employee, double overtimeHours) {
+        double baseGrossSalary = employee.getGrossSalary();
+        double overtimePay = overtimeHours * employee.getHourlyRate() * 1.25; // 25% premium
+        return baseGrossSalary + overtimePay;
+    }
+
+    private double calculateOvertimeHours(List<EmployeeTimeLogs> logs, double hourlyRate) {
+        double totalOvertimeHours = 0.0;
+        return totalOvertimeHours;
+    }
 }

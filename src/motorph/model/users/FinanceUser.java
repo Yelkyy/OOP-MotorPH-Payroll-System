@@ -30,9 +30,7 @@ public class FinanceUser extends Employee {
         return List.of(
                 "Dashboard",
                 "My Profile",
-                "Generate Employee Payroll",
-                "Generate Payslip",
-                "View Payroll Reports",
+                "Payroll Management", // Generate Employee Payroll", Generate Payslip, View Payroll Reports
                 "Print Payslip");
     }
 }
