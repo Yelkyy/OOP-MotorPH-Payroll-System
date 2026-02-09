@@ -1,4 +1,4 @@
-package motorph.service;
+package motorph.model.payroll;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -11,28 +11,60 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import motorph.contracts.PayrollCalculator;
-import motorph.model.EmployeeDetails;
+import motorph.model.core.Employee;
 import motorph.model.EmployeeTimeLogs;
-import motorph.model.payroll.DeductionBreakdown;
 
 /**
- * Standard implementation of PayrollCalculator that computes employee payroll
- * deductions.
- * Handles salary calculations, government contributions (SSS, PhilHealth,
- * Pag-IBIG), tax computation,
- * and late/undertime deductions based on time logs and pay period.
+ * Utility class providing the core payroll calculation engine.
+ * Responsibility: Calculate all statutory deductions and penalties:
+ * - Statutory Deductions: SSS, PhilHealth, Pag-IBIG, Withholding Tax
+ * - Penalties: Late/Undertime deductions based on attendance logs
+ * 
+ * Note: Gross salary is obtained from Employee.getGrossSalary().
+ * Returns PayrollResult containing itemized deductions and net pay.
  */
-public class StandardPayrollCalculator implements PayrollCalculator {
+public class PayrollCalculator {
 
-    // Tax Constants
+    public static class PayrollResult {
+        public double lateUndertime;
+        public double sss;
+        public double philhealth;
+        public double pagibig;
+        public double tax;
+        public double totalDeductions;
+        public double netPay;
+
+        public PayrollResult() {
+        }
+    }
+
+    // ========== TAX CONSTANTS ==========
+
     private static final double TAX_BRACKET_1_LIMIT = 20832;
     private static final double TAX_BRACKET_2_LIMIT = 33333;
     private static final double TAX_BRACKET_3_LIMIT = 66667;
     private static final double TAX_BRACKET_4_LIMIT = 166667;
     private static final double TAX_BRACKET_5_LIMIT = 666667;
 
-    // Date Parsing
+    // ========== CONTRIBUTION CONSTANTS ==========
+
+    // SSS
+    private static final double SSS_MAX_SALARY = 24750;
+    private static final double SSS_MAX_CONTRIBUTION = 1125.00;
+    private static final double SSS_RATE = 0.045;
+
+    // PhilHealth
+    private static final double PHILHEALTH_LOWER_LIMIT = 10000;
+    private static final double PHILHEALTH_UPPER_LIMIT = 59999.99;
+    private static final double PHILHEALTH_MAX_PREMIUM = 1800;
+    private static final double PHILHEALTH_RATE = 0.03;
+
+    // Pag-IBIG
+    private static final double PAGIBIG_RATE = 0.02;
+    private static final double PAGIBIG_MAX_CONTRIBUTION = 100;
+
+    // ========== DATE PARSING ==========
+
     private static final DateTimeFormatter TIMELOG_DATE_FMT = DateTimeFormatter.ofPattern("MM/dd/uuuu", Locale.US)
             .withResolverStyle(ResolverStyle.STRICT);
 
@@ -40,14 +72,15 @@ public class StandardPayrollCalculator implements PayrollCalculator {
         return LocalDate.parse(raw == null ? "" : raw.trim(), TIMELOG_DATE_FMT);
     }
 
-    @Override
-    public DeductionBreakdown computeDeductions(
-            EmployeeDetails employee,
+    // ========== MAIN COMPUTATION METHOD ==========
+
+    public PayrollResult computeDeductions(
+            Employee employee,
             List<EmployeeTimeLogs> logs,
             String monthYear,
             int payPeriod) {
 
-        DeductionBreakdown result = new DeductionBreakdown();
+        PayrollResult result = new PayrollResult();
 
         YearMonth yearMonth = YearMonth.parse(monthYear, DateTimeFormatter.ofPattern("MM-yyyy"));
         int lastDayOfMonth = yearMonth.lengthOfMonth();
@@ -72,10 +105,10 @@ public class StandardPayrollCalculator implements PayrollCalculator {
 
         result.lateUndertime = lateUndertime;
 
-        // Government contributions delegated to ContributionCalculator
-        result.sss = hasDeductions ? ContributionCalculator.calculateSSS(semiMonthlyBasic) : 0.0;
-        result.philhealth = hasDeductions ? ContributionCalculator.calculatePhilHealth(semiMonthlyBasic) : 0.0;
-        result.pagibig = hasDeductions ? ContributionCalculator.calculatePagIbig(semiMonthlyBasic) : 0.0;
+        // Government contributions (inline calculations)
+        result.sss = hasDeductions ? calculateSSS(semiMonthlyBasic) : 0.0;
+        result.philhealth = hasDeductions ? calculatePhilHealth(semiMonthlyBasic) : 0.0;
+        result.pagibig = hasDeductions ? calculatePagIbig(semiMonthlyBasic) : 0.0;
 
         double nonTaxDeductions = result.lateUndertime + result.sss + result.philhealth + result.pagibig;
 
@@ -90,7 +123,41 @@ public class StandardPayrollCalculator implements PayrollCalculator {
         return result;
     }
 
-    // Internal Helpers (logic only)
+    public PayrollResult computeDeductionsByCutoff(
+            Employee employee,
+            List<EmployeeTimeLogs> logs,
+            LocalDate cutoffDate) {
+        String monthYear = cutoffDate.format(DateTimeFormatter.ofPattern("MM-yyyy"));
+        int payPeriod = (cutoffDate.getDayOfMonth() <= 15) ? 1 : 2;
+        return computeDeductions(employee, logs, monthYear, payPeriod);
+    }
+
+    // ========== GOVERNMENT CONTRIBUTION CALCULATIONS ==========
+
+    private static double calculateSSS(double basicSalary) {
+        if (basicSalary > SSS_MAX_SALARY) {
+            return SSS_MAX_CONTRIBUTION;
+        }
+        return basicSalary * SSS_RATE;
+    }
+
+    private static double calculatePhilHealth(double basicSalary) {
+        double premium;
+        if (basicSalary <= PHILHEALTH_LOWER_LIMIT) {
+            premium = 300;
+        } else if (basicSalary <= PHILHEALTH_UPPER_LIMIT) {
+            premium = Math.min(basicSalary * PHILHEALTH_RATE, PHILHEALTH_MAX_PREMIUM);
+        } else {
+            premium = PHILHEALTH_MAX_PREMIUM;
+        }
+        return premium / 2.0; // employee share per cutoff
+    }
+
+    private static double calculatePagIbig(double basicSalary) {
+        return Math.min(PAGIBIG_MAX_CONTRIBUTION, basicSalary * PAGIBIG_RATE);
+    }
+
+    // ========== INTERNAL HELPERS ==========
 
     private static List<EmployeeTimeLogs> filterLogsByDateRange(
             List<EmployeeTimeLogs> logs,
@@ -118,7 +185,7 @@ public class StandardPayrollCalculator implements PayrollCalculator {
         return filteredLogs;
     }
 
-    private static double calculateLateUndertimeTotal(EmployeeDetails employee, List<EmployeeTimeLogs> logs) {
+    private static double calculateLateUndertimeTotal(Employee employee, List<EmployeeTimeLogs> logs) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm");
 
         LocalTime scheduledIn = LocalTime.parse("09:00", formatter);
@@ -163,5 +230,29 @@ public class StandardPayrollCalculator implements PayrollCalculator {
         }
 
         return Math.round(tax * 100.0) / 100.0;
+    }
+
+    // ========== GROSS SALARY COMPUTATION (OVERLOADED) ==========
+
+    public double computeGrossSalary(Employee employee) {
+        return employee.getGrossSalary();
+    }
+
+    public double computeGrossSalary(Employee employee, List<EmployeeTimeLogs> logs) {
+        double baseGrossSalary = employee.getGrossSalary();
+        double overtimeHours = calculateOvertimeHours(logs, employee.getHourlyRate());
+        double overtimePay = overtimeHours * employee.getHourlyRate() * 1.25; // 25% premium
+        return baseGrossSalary + overtimePay;
+    }
+
+    public double computeGrossSalary(Employee employee, double overtimeHours) {
+        double baseGrossSalary = employee.getGrossSalary();
+        double overtimePay = overtimeHours * employee.getHourlyRate() * 1.25; // 25% premium
+        return baseGrossSalary + overtimePay;
+    }
+
+    private double calculateOvertimeHours(List<EmployeeTimeLogs> logs, double hourlyRate) {
+        double totalOvertimeHours = 0.0;
+        return totalOvertimeHours;
     }
 }

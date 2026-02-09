@@ -1,4 +1,4 @@
-package motorph.ui.components;
+package motorph.ui.util;
 
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;

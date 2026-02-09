@@ -10,9 +10,10 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Data model class representing employee attendance time logs.
- * Stores employee identification, date, login/logout times, and provides
- * methods to calculate work hours and handle various date/time formats.
+ * Data model class representing a single employee attendance record.
+ * Tracks login time, logout time, and calculates total work hours for a
+ * specific date.
+ * Supports multiple date/time formats for flexible data import from CSV files.
  */
 public class EmployeeTimeLogs {
 

@@ -1,13 +1,16 @@
 package motorph.ui.components;
 
 import motorph.model.Role;
-import motorph.ui.Attendance;
+import motorph.model.users.HrUser;
+import motorph.ui.AttendanceManagement;
 import motorph.ui.EmployeePanel;
 import motorph.ui.DashboardPanel;
-import motorph.ui.MenuHandler;
+import motorph.ui.LeaveManagement;
+import motorph.ui.util.MenuHandler;
 import motorph.ui.PayrunsPanel;
 import motorph.ui.employeeRole.MyProfilePanel;
 import motorph.ui.employeeRole.LeaveRequestPanel;
+import motorph.service.MenuService;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -17,6 +20,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Rectangle2D;
 import java.beans.Beans;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.Box;
 import javax.swing.JComponent;
@@ -32,58 +38,15 @@ public class Menu extends JComponent {
 
     private MigLayout layout;
     private JPanel mainPanel;
+    private MenuService menuService;
 
     private MenuItem selectedItem;
     private String firstName = "User";
     private Role role = Role.EMPLOYEE;
     private Employee loggedInEmployee;
 
-    // Menu structure: {Main Menu}
-    private final MenuHandler[] menuItems = new MenuHandler[] {
-
-            // Employee self-service (EMPLOYEE only)
-            new MenuHandler("2White", "My Profile", MenuHandler.menuType.MENU),
-            new MenuHandler("3White", "My Attendance", MenuHandler.menuType.MENU),
-            new MenuHandler("3White", "Leave", MenuHandler.menuType.MENU),
-            new MenuHandler("3White", "My Payslip", MenuHandler.menuType.MENU),
-
-            // Non-employee dashboard
-            new MenuHandler("0White", "Dashboard", MenuHandler.menuType.MENU),
-
-            // Admin / HR
-            new MenuHandler("2White", "Employee", MenuHandler.menuType.MENU),
-
-            // Admin / HR / Finance
-            new MenuHandler("3White", "Attendance", MenuHandler.menuType.MENU),
-
-            // Admin / Finance
-            new MenuHandler("3", "Payroll", MenuHandler.menuType.MENU),
-            // Spacers
-            new MenuHandler("", "", MenuHandler.menuType.MENU),
-            new MenuHandler("", "", MenuHandler.menuType.MENU),
-            new MenuHandler("", "", MenuHandler.menuType.MENU),
-            new MenuHandler("", "", MenuHandler.menuType.MENU),
-            new MenuHandler("", "", MenuHandler.menuType.MENU),
-            new MenuHandler("", "", MenuHandler.menuType.MENU),
-            new MenuHandler("", "", MenuHandler.menuType.MENU),
-            new MenuHandler("", "", MenuHandler.menuType.MENU),
-            new MenuHandler("", "", MenuHandler.menuType.MENU),
-            new MenuHandler("", "", MenuHandler.menuType.MENU),
-            new MenuHandler("", "", MenuHandler.menuType.MENU),
-            new MenuHandler("", "", MenuHandler.menuType.MENU),
-            new MenuHandler("", "", MenuHandler.menuType.MENU),
-            new MenuHandler("", "", MenuHandler.menuType.MENU),
-            new MenuHandler("", "", MenuHandler.menuType.MENU),
-            new MenuHandler("", "", MenuHandler.menuType.MENU),
-            new MenuHandler("", "", MenuHandler.menuType.MENU),
-            new MenuHandler("", "", MenuHandler.menuType.MENU),
-            new MenuHandler("", "", MenuHandler.menuType.MENU),
-            new MenuHandler("", "", MenuHandler.menuType.MENU),
-
-            new MenuHandler("divider", "", MenuHandler.menuType.MENU),
-
-            new MenuHandler("logout", "Log Out", MenuHandler.menuType.MENU)
-    };
+    // Menu icon mapping (all available menu items)
+    private final Map<String, String> menuIconMap = new HashMap<>();
 
     public Menu() {
         if (!Beans.isDesignTime()) {
@@ -91,6 +54,25 @@ public class Menu extends JComponent {
         } else {
             setOpaque(true);
         }
+    }
+
+    private void initMenuIconMap() {
+        menuIconMap.put("Dashboard", "0White");
+        menuIconMap.put("My Profile", "2White");
+        menuIconMap.put("Attendance", "3White");
+        menuIconMap.put("Leave", "3White");
+        menuIconMap.put("Payslip", "3White");
+        menuIconMap.put("Employee Management", "2White");
+        menuIconMap.put("Attendance Overview", "3White");
+        menuIconMap.put("Leave Management", "2White");
+        menuIconMap.put("Payroll Management", "3");
+        menuIconMap.put("Generate Employee Payroll", "3");
+        menuIconMap.put("Generate Payslip", "3");
+        menuIconMap.put("View Payroll Reports", "3");
+        menuIconMap.put("Print Payslip", "3");
+        menuIconMap.put("Manage User Accounts", "2White");
+        menuIconMap.put("Update Role/Access Rights", "2White");
+        menuIconMap.put("System Reports", "2White");
     }
 
     public void setMainPanel(JPanel panel) {
@@ -103,11 +85,19 @@ public class Menu extends JComponent {
 
     public void setRole(Role role) {
         this.role = (role == null) ? Role.EMPLOYEE : role;
+        if (menuService == null) {
+            menuService = new MenuService();
+        }
         rebuildMenu();
     }
 
     public void setEmployee(Employee employee) {
         this.loggedInEmployee = employee;
+        if (menuService == null) {
+            menuService = new MenuService();
+        }
+        menuService.setLoggedInEmployee(employee);
+        rebuildMenu();
     }
 
     public void selectMenuItemByName(String menuName) {
@@ -130,6 +120,8 @@ public class Menu extends JComponent {
         layout = new MigLayout("wrap 1, fillx, gapy 0, inset 2", "fill", "top");
         setLayout(layout);
         setOpaque(true);
+        menuService = new MenuService();
+        initMenuIconMap();
         rebuildMenu();
     }
 
@@ -137,49 +129,42 @@ public class Menu extends JComponent {
         removeAll();
         selectedItem = null;
 
-        for (int i = 0; i < menuItems.length; i++) {
-            MenuHandler handler = menuItems[i];
+        // Build menu dynamically from employee's menu items
+        if (loggedInEmployee != null) {
+            List<String> userMenuItems = loggedInEmployee.getMenuItems();
 
-            if (!shouldShow(handler.getName())) {
-                continue;
+            if (userMenuItems != null) {
+                for (String menuName : userMenuItems) {
+                    String iconName = menuIconMap.getOrDefault(menuName, "2White");
+                    MenuHandler handler = new MenuHandler(iconName, menuName, MenuHandler.menuType.MENU);
+                    addMenu(handler, 0);
+                }
             }
-
-            addMenu(handler, i);
         }
+
+        // spacers of logout button
+        for (int i = 0; i < 15; i++) {
+            add(Box.createVerticalStrut(15));
+        }
+
+        // divider and logout
+        JSeparator separator = new JSeparator();
+        separator.setForeground(new Color(200, 200, 200));
+        add(separator, "gapy 10 10");
+
+        MenuHandler logoutHandler = new MenuHandler("logout", "Log Out", MenuHandler.menuType.MENU);
+        MenuItem logoutItem = new MenuItem("Log Out", 0);
+        logoutItem.setIcon(logoutHandler.toIcon());
+        logoutItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                handleClick("Log Out", logoutItem);
+            }
+        });
+        add(logoutItem);
 
         revalidate();
         repaint();
-    }
-
-    private boolean shouldShow(String name) {
-        // Always keep visual layout items
-        if (name == null || name.isEmpty() || "divider".equals(name) || "Log Out".equals(name)) {
-            return true;
-        }
-
-        if ("My Profile".equals(name) || "My Attendance".equals(name)
-                || "Leave".equals(name) || "My Payslip".equals(name)) {
-            return role == Role.EMPLOYEE;
-        }
-
-        if ("Dashboard".equals(name)) {
-            return role != Role.EMPLOYEE;
-        }
-
-        if ("Employee".equals(name)) {
-            return role == Role.ADMIN || role == Role.HR;
-        }
-
-        if ("Attendance".equals(name)) {
-            return role == Role.ADMIN || role == Role.HR || role == Role.FINANCE;
-        }
-
-        if ("Payroll".equals(name)) {
-            return role == Role.ADMIN || role == Role.FINANCE;
-        }
-
-        // Default: hide unknown items for safety
-        return false;
     }
 
     private void addMenu(MenuHandler handler, int index) {
@@ -236,13 +221,16 @@ public class Menu extends JComponent {
                 case "Dashboard":
                     newPanel = new DashboardPanel(firstName);
                     break;
-                case "Employee":
+                case "Employee Management":
                     newPanel = new EmployeePanel("Employee List");
                     break;
-                case "Attendance":
-                    newPanel = new Attendance();
+                case "Attendance Overview":
+                    newPanel = new AttendanceManagement();
                     break;
-                case "Payroll":
+                case "Leave Management":
+                    newPanel = new LeaveManagement((HrUser) loggedInEmployee);
+                    break;
+                case "Payroll Management":
                     newPanel = new PayrunsPanel();
                     break;
             }

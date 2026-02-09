@@ -8,41 +8,41 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import motorph.contracts.EmployeeCrudOperations;
-import motorph.model.EmployeeDetails;
-import motorph.model.EmployeeTimeLogs;
-import motorph.model.User;
+import motorph.model.Role;
 import motorph.model.core.Employee;
+import motorph.model.EmployeeTimeLogs;
 import motorph.model.users.AdminUser;
 import motorph.model.users.EmployeeUser;
 import motorph.model.users.FinanceUser;
 import motorph.model.users.HrUser;
-import motorph.repository.DataHandler;
+import motorph.dao.DataHandler;
 
 /**
  * Service class for employee management operations.
  * Provides CRUD operations for employee data, time log retrieval, and employee
  * role creation.
- * Implements EmployeeCrudOperations contract and delegates data operations to
- * DataHandler.
  */
-public class EmployeeService implements EmployeeCrudOperations {
+public class EmployeeService {
 
     // UI safe for finding one employee using one employee id
-    public static EmployeeDetails getEmployeeById(String employeeNumber) {
+    public static Employee getEmployeeById(String employeeNumber) {
         if (employeeNumber == null)
             return null;
 
-        return DataHandler.readEmployeeDetails()
-                .stream()
-                .filter(e -> employeeNumber.equals(e.getEmployeeNumber()))
-                .findFirst()
-                .orElse(null);
+        Object[] data = DataHandler.readEmployeeData(employeeNumber);
+        if (data == null) {
+            return null;
+        }
+
+        return createEmployeeFromData(data, Role.EMPLOYEE);
     }
 
     // Get all employees (UI-safe)
-    public static List<EmployeeDetails> getAllEmployees() {
-        return DataHandler.readEmployeeDetails();
+    public static List<Employee> getAllEmployees() {
+        return DataHandler.readAllEmployeeData()
+                .stream()
+                .map(data -> createEmployeeFromData(data, Role.EMPLOYEE))
+                .collect(Collectors.toList());
     }
 
     // Get time logs for an employee (Payroll/UI-safe)
@@ -61,43 +61,122 @@ public class EmployeeService implements EmployeeCrudOperations {
         return DataHandler.generateNewEmpId();
     }
 
-    // ==========================================
-    // Interface implementation (instance methods)
-    // These satisfy EmployeeCrudOperations contract.
-    // They delegate to DataHandler.
-    // ===========================================
+    public static Employee loadEmployeeForRole(String employeeNumber, Role role) {
+        if (employeeNumber == null || role == null) {
+            return null;
+        }
 
-    @Override
-    public void addEmployee(EmployeeDetails employee) {
+        Object[] data = DataHandler.readEmployeeData(employeeNumber);
+        if (data == null) {
+            return null;
+        }
+
+        return createEmployeeFromData(data, role);
+    }
+
+    private static Employee createEmployeeFromData(Object[] params, Role role) {
+        String employeeNumber = (String) params[0];
+        String lastName = (String) params[1];
+        String firstName = (String) params[2];
+        String birthday = (String) params[3];
+        String address = (String) params[4];
+        String phoneNumber = (String) params[5];
+        String sssNumber = (String) params[6];
+        String philhealthNumber = (String) params[7];
+        String tinNumber = (String) params[8];
+        String pagIbigNumber = (String) params[9];
+        String status = (String) params[10];
+        String position = (String) params[11];
+        String immediateSupervisor = (String) params[12];
+        double basicSalary = (double) params[13];
+        double riceSubsidy = (double) params[14];
+        double phoneAllowance = (double) params[15];
+        double clothingAllowance = (double) params[16];
+        double grossSemiMonthlyRate = (double) params[17];
+        double hourlyRate = (double) params[18];
+
+        switch (role) {
+            case ADMIN:
+                return new AdminUser(employeeNumber, lastName, firstName, birthday, address,
+                        phoneNumber, sssNumber, philhealthNumber, tinNumber, pagIbigNumber,
+                        status, position, immediateSupervisor, basicSalary, riceSubsidy,
+                        phoneAllowance, clothingAllowance, grossSemiMonthlyRate, hourlyRate);
+            case HR:
+                return new HrUser(employeeNumber, lastName, firstName, birthday, address,
+                        phoneNumber, sssNumber, philhealthNumber, tinNumber, pagIbigNumber,
+                        status, position, immediateSupervisor, basicSalary, riceSubsidy,
+                        phoneAllowance, clothingAllowance, grossSemiMonthlyRate, hourlyRate);
+            case FINANCE:
+                return new FinanceUser(employeeNumber, lastName, firstName, birthday, address,
+                        phoneNumber, sssNumber, philhealthNumber, tinNumber, pagIbigNumber,
+                        status, position, immediateSupervisor, basicSalary, riceSubsidy,
+                        phoneAllowance, clothingAllowance, grossSemiMonthlyRate, hourlyRate);
+            case EMPLOYEE:
+            default:
+                return new EmployeeUser(employeeNumber, lastName, firstName, birthday, address,
+                        phoneNumber, sssNumber, philhealthNumber, tinNumber, pagIbigNumber,
+                        status, position, immediateSupervisor, basicSalary, riceSubsidy,
+                        phoneAllowance, clothingAllowance, grossSemiMonthlyRate, hourlyRate);
+        }
+    }
+
+    // ==========================================
+    // ==========================================
+    // CRUD Operations
+    // ==========================================
+
+    public void add(Employee employee) {
         DataHandler.addEmployeeToCSV(employee);
     }
 
-    @Override
-    public void updateEmployee(EmployeeDetails employee) {
+    public void update(Employee employee) {
         DataHandler.updateEmployeeInCSV(employee);
     }
 
-    @Override
-    public void deleteEmployee(String employeeNumber) {
-
+    public void delete(String employeeNumber) {
         if (isAdminEmployee(employeeNumber)) {
             throw new IllegalStateException(
                     "Admin employee cannot be deleted. System must always have an administrator.");
         }
-
         DataHandler.removeEmployeeFromCSV(employeeNumber);
         DataHandler.deleteTimeLogsByEmployeeNumber(employeeNumber);
     }
 
-    @Override
-    public EmployeeDetails findEmployeeById(String employeeNumber) {
+    public Employee findById(String employeeNumber) {
         return getEmployeeById(employeeNumber);
     }
 
-    @Override
-    public List<EmployeeDetails> findAllEmployees() {
+    public List<Employee> findAll() {
         return getAllEmployees();
     }
+
+    // ==========================================
+    // Alternate method names (for convenience)
+    // ==========================================
+
+    public void addEmployee(Employee employee) {
+        add(employee);
+    }
+
+    public void updateEmployee(Employee employee) {
+        update(employee);
+    }
+
+    public void deleteEmployee(String employeeNumber) {
+        delete(employeeNumber);
+    }
+
+    public Employee findEmployeeById(String employeeNumber) {
+        return findById(employeeNumber);
+    }
+
+    public List<Employee> findAllEmployees() {
+        return findAll();
+    }
+
+    // ==========================================
+    // Helper methods
+    // ==========================================
 
     private boolean isAdminEmployee(String employeeNumber) {
         Path filePath = Paths.get("resources", "MotorPH Users.csv");
@@ -127,29 +206,4 @@ public class EmployeeService implements EmployeeCrudOperations {
         return false;
     }
 
-    public Employee getLoggedInEmp(User user) {
-
-        if (user == null) {
-            throw new IllegalArgumentException("User cannot be null");
-        }
-
-        EmployeeDetails details = getEmployeeById(user.getEmployeeNumber());
-
-        if (details == null) {
-            throw new IllegalStateException(
-                    "Employee record not found for " + user.getEmployeeNumber());
-        }
-
-        switch (user.getRole()) {
-            case ADMIN:
-                return new AdminUser(details);
-            case HR:
-                return new HrUser(details);
-            case FINANCE:
-                return new FinanceUser(details);
-            case EMPLOYEE:
-                return new EmployeeUser(details);
-        }
-        return null;
-    }
 }

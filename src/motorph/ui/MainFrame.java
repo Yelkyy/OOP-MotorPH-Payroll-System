@@ -1,10 +1,8 @@
 package motorph.ui;
 
 import motorph.ui.employeeRole.MyProfilePanel;
-import motorph.model.User;
 import motorph.model.Role;
 import motorph.model.core.Employee;
-import motorph.service.EmployeeService;
 
 import javax.swing.JPanel;
 
@@ -19,27 +17,26 @@ import javax.swing.JPanel;
  */
 public class MainFrame extends javax.swing.JFrame {
         private static JPanel mainBody;
-        private User loggedInUser;
+        @SuppressWarnings("unused")
         private Employee loggedInEmployee;
 
-        public MainFrame(User user, Employee employee) {
+        public MainFrame(Employee employee) {
                 initComponents();
                 setLocationRelativeTo(null);
 
-                this.loggedInUser = user;
                 this.loggedInEmployee = employee;
 
                 mainBody = body;
                 menu1.setMainPanel(body);
-                menu1.setRole(user.getRole());
-                menu1.setFirstName(user.getFirstName());
+                menu1.setRole(employee.getRole());
+                menu1.setFirstName(employee.getFirstName());
                 menu1.setEmployee(employee);
 
-                if (user.getRole() == Role.EMPLOYEE) {
+                if (employee.getRole() == Role.EMPLOYEE) {
                         showPanel(new MyProfilePanel(employee));
                         menu1.selectMenuItemByName("My Profile");
                 } else {
-                        showPanel(new DashboardPanel(user.getFullName()));
+                        showPanel(new DashboardPanel(employee.getFirstName()));
                         menu1.selectMenuItemByName("Dashboard");
                 }
         }
@@ -64,7 +61,7 @@ public class MainFrame extends javax.swing.JFrame {
                 mainBody.repaint();
         }
 
-        @SuppressWarnings("unchecked")
+        // <editor-fold defaultstate="collapsed" desc="Generated
         // <editor-fold defaultstate="collapsed" desc="Generated
         // <editor-fold defaultstate="collapsed" desc="Generated
         // Code">//GEN-BEGIN:initComponents
@@ -98,8 +95,6 @@ public class MainFrame extends javax.swing.JFrame {
                 jPanel1.setLayout(jPanel1Layout);
                 jPanel1Layout.setHorizontalGroup(
                                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 200,
-                                                                Short.MAX_VALUE)
                                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout
                                                                 .createSequentialGroup()
                                                                 .addContainerGap()
@@ -107,7 +102,13 @@ public class MainFrame extends javax.swing.JFrame {
                                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                 Short.MAX_VALUE)
-                                                                .addContainerGap()));
+                                                                .addContainerGap())
+                                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                                                .addComponent(jScrollPane2,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                241,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(0, 0, Short.MAX_VALUE)));
                 jPanel1Layout.setVerticalGroup(
                                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGroup(jPanel1Layout.createSequentialGroup()
@@ -144,14 +145,13 @@ public class MainFrame extends javax.swing.JFrame {
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addContainerGap(1067, Short.MAX_VALUE)));
+                                                                .addContainerGap(1053, Short.MAX_VALUE)));
                 layout.setVerticalGroup(
                                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                Short.MAX_VALUE));
+                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
 
                 pack();
         }// </editor-fold>//GEN-END:initComponents
